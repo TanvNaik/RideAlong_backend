@@ -2,6 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const cors = require('cors')
+
+// Routes
+const authenticateRoute = require("./routes/authentication");
+
 
 // PORT
 const port = process.env.PORT || 3000;
@@ -9,7 +16,7 @@ const port = process.env.PORT || 3000;
 
 // DB Connection
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("DB CONNECTED");
     app.listen(port, () => {
@@ -19,8 +26,15 @@ mongoose
     console.log(error)
   });
 
+// Middlewares
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
 
 
+
+// Routes
+app.use("/api", authenticateRoute);
 
 app.get('/', (req, res) => {
   res.send('Helloo');
