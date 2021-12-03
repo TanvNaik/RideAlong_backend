@@ -1,10 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const {signup, signin,signout} = require("../controllers/authentication")
+const {signup, signin,signout, isSignedIn} = require("../controllers/authentication")
 
 
-// use express validator to check
+// GET routes
+router.get("/signout", signout);
+
+router.get("/test", isSignedIn, (req,res)=>{
+    res.json(req.auth);
+})
+
+
+// POST routes
+router.post("/signin", 
+    [
+        check("email")
+        .isEmail()
+        .withMessage("Enter a valid email Id"),
+        
+        check("password")
+        .isLength({min:1})
+        .withMessage("Password field is required")
+    ],
+    signin
+)
+
 router.post("/signup", [
     check("name")
     .isLength({min: 3})
@@ -22,7 +43,11 @@ router.post("/signup", [
 
     check("password")
     .isLength({min: 6})
-    .withMessage("Password should be atleast 6 characters")
+    .withMessage("Password should be atleast 6 characters"),
+
+    check("contact_number")
+    .isLength({min: 10, max: 10})
+    .withMessage('Enter a valid contact number')
 
 ], signup )
 

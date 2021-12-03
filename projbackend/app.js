@@ -36,6 +36,7 @@ app.use(cors());
 // Routes
 app.use("/api", authenticateRoute);
 
+
 app.get('/', (req, res) => {
   res.send('Helloo');
 })
