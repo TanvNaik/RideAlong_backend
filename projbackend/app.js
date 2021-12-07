@@ -8,6 +8,7 @@ const cors = require('cors')
 
 // Routes
 const authenticateRoute = require("./routes/authentication");
+const userRoute = require("./routes/user");
 
 
 // PORT
@@ -35,6 +36,7 @@ app.use(cors());
 
 // Routes
 app.use("/api", authenticateRoute);
+app.use("/api", userRoute);
 
 
 app.get('/', (req, res) => {

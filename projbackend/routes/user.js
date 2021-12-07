@@ -1,15 +1,30 @@
 const express = require('express')
-const router = express.Router;
+const router = express.Router();
 
 const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentication")
 
-const {getUserById, getUserFeedBacks,getUserRides} = require("../controllers/user")
+const {
+    getUserById, getUserFeedBacks,getUserRides, getUser, 
+    updateUser,writeFeedback, setFeedbackReceiver, 
+    setFeedbacker
+} = require("../controllers/user")
+
+// PARAMs
+router.param("userId", getUserById)
+router.param("feedbacker", setFeedbacker)
+router.param("feedbackReceiver", setFeedbackReceiver)
 
 // GET
-router.get("/:userId", getUserById)
-router.get("/:userId/feedbacks",getUserFeedBacks);
-router.get("/:userId/rides",getUserRides);
-    
+router.get("/user/:userId", isSignedIn, getUser);
+router.get("/feedbacks/user/:userId", getUserFeedBacks);
+router.get("/rides/user/:userId",getUserRides);
+
 
 // PUT
-router.put("/update/:userID")
+router.put("/user/:userId", isSignedIn, isAuthenticated,updateUser);
+
+
+// POST
+router.post("/writeFeedback/feedbacker/:feedbacker/feedbackReciever/:feedbackReceiver", isSignedIn, isAuthenticated, writeFeedback)
+
+module.exports = router;
