@@ -9,7 +9,9 @@ const cors = require('cors')
 // Routes
 const authenticateRoute = require("./routes/authentication");
 const userRoute = require("./routes/user");
-
+const rideRoute = require("./routes/ride")
+const cityRoute = require("./routes/city")
+const invoiceRoute = require("./routes/invoice")
 
 // PORT
 const port = process.env.PORT || 3000;
@@ -37,6 +39,10 @@ app.use(cors());
 // Routes
 app.use("/api", authenticateRoute);
 app.use("/api", userRoute);
+app.use("/api", rideRoute);
+ 
+app.use("/api", cityRoute);
+app.use("/api", invoiceRoute);
 
 
 app.get('/', (req, res) => {

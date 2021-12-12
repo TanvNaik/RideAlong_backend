@@ -3,7 +3,6 @@ const {ObjectId} = mongoose.Schema;
 
 const invoiceSchema = mongoose.Schema({
     invoiceAmount: Number,
-    invoiceDate: Date,
     sender:{
         type: ObjectId,
         ref: "User"
@@ -12,7 +11,7 @@ const invoiceSchema = mongoose.Schema({
         type: ObjectId,
         ref: "User"
     },
-    rider:{
+    ride:{
         type: ObjectId,
         ref: "Ride"
     },

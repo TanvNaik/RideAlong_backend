@@ -7,11 +7,11 @@ const rideSchema = mongoose.Schema({
         ref: "User"
     },
     passengers: Array,
-    source:{
+    sourceLocation:{
         type: ObjectId,
         ref: "City"
     },
-    destination:{
+    destinationLocation:{
         type: ObjectId,
         ref: "City"
     },

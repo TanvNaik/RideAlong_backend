@@ -5,8 +5,8 @@ const citySchema = mongoose.Schema({
         type: String,
         required: true
     },
-    latitude: Number,
-    longitutde: Number
-})
+    latitude: String,
+    longitude: String
+},{timestamps: true})
 
 module.exports = mongoose.model("City", citySchema);

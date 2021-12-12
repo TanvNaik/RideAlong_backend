@@ -6,7 +6,7 @@ const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentic
 const {
     getUserById, getUserFeedBacks,getUserRides, getUser, 
     updateUser,writeFeedback, setFeedbackReceiver, 
-    setFeedbacker
+    setFeedbacker,getUserPayments
 } = require("../controllers/user")
 
 // PARAMs
@@ -18,7 +18,7 @@ router.param("feedbackReceiver", setFeedbackReceiver)
 router.get("/user/:userId", isSignedIn, getUser);
 router.get("/feedbacks/user/:userId", getUserFeedBacks);
 router.get("/rides/user/:userId",getUserRides);
-
+router.get("/payments/user/:userId", getUserPayments)
 
 // PUT
 router.put("/user/:userId", isSignedIn, isAuthenticated,updateUser);

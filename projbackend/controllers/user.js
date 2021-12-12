@@ -1,7 +1,8 @@
 const User = require("../models/user")
 const Ride = require("../models/ride")
 const Feedback = require("../models/feedback")
-const user = require("../models/user")
+const Invoice = require("../models/invoice")
+
 exports.getUserById = (req,res, next, id)=>{
     User.findById(id).exec((err,user)=>{
         if(err || !user){
@@ -25,11 +26,11 @@ exports.getUser = (req,res)=>{
 }
 
 exports.getUserRides = (req,res)=>{
-    Ride.find({$or: 
+    Ride.find({$or : 
         [
             {"driverUser": req.profile._id},
             {"passengers": {
-                $in: 
+                $in : 
                 [ req.profile._id ]
                 }
             }
@@ -40,7 +41,7 @@ exports.getUserRides = (req,res)=>{
                 error: "No Rides Found"
             })
         }
-        return rides;
+        return res.json(rides);
     })
 }
 
@@ -61,10 +62,39 @@ exports.updateUser = (req,res)=>{
         })
 }
 
+exports.getUserPayments = (req,res)=>{
+
+    Invoice.find({
+        "_id": {
+            $in: req.profile.payments
+        }
+    }, (error,payments)=>{
+        if(error){
+            return res.status(400).json({
+                error: "Cannot find Payments"
+            })
+        }
+        return res.json({
+            payments: payments
+        })
+    })
+}
 // FEEDBACKS
 exports.getUserFeedBacks = (req,res)=>{
-    return res.json({
-        feedbacks: req.profile.feedback
+    
+    Feedback.find({
+        "_id": {
+            $in: req.profile.feedbacks
+        }
+    }, (error,feedbacks)=>{
+        if(error){
+            return res.status(400).json({
+                error: "Cannot find Feedbacks"
+            })
+        }
+        return res.json({
+            feedbacks: feedbacks
+        })
     })
 }
 exports.setFeedbacker = (req,res,next,id)=>{
@@ -75,10 +105,11 @@ exports.setFeedbacker = (req,res,next,id)=>{
                 error: "No user was found in DB"
             });
         }
-        req.feedbacker = user;
+        req.profile = user;
+
         //hiding secured info
-        req.feedbacker.salt = undefined;
-        req.feedbacker.encry_password = undefined;
+        req.profile.salt = undefined;
+        req.profile.encry_password = undefined;
     })
     next();
 }
@@ -100,8 +131,8 @@ exports.setFeedbackReceiver = (req,res, next, id)=>{
 }
 exports.writeFeedback = (req,res)=>{
     const feedback = new Feedback({
-        feedbacker: req.feedbacker,
-        receiver: req.feedbackReceiver,
+        feedbacker: req.profile._id,
+        receiver: req.feedbackReceiver._id,
         feedbackText: req.body.feedbackText,
         rating: req.body.rating
     })
@@ -112,6 +143,17 @@ exports.writeFeedback = (req,res)=>{
                 error: `${err}`,
             })
         }
+        User.findByIdAndUpdate(feedback.receiver, 
+            {"$push" : { "feedbacks": feedback._id}},
+            {new: true, useFindAndModify: false },
+            (err, user)=>{
+                if(err){
+                    return res.status(400).json({
+                        error: "Unable to update feedback to receiver"
+                    })
+                }
+                }
+            )
         return res.json({
             feedbacker: feedback.feedbacker,
             receiver: feedback.receiver,
