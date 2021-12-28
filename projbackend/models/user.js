@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
-const { ObjectId } = mongoose.Schema;
 
 
 const userSchema = new mongoose.Schema({
@@ -29,8 +28,8 @@ const userSchema = new mongoose.Schema({
     },
     salt: String,
     vehicle:{
-        type: ObjectId,
-        ref: "Vehicle"
+        type: Array,
+        default: []
     },
     rides:{
         type: Array,
@@ -55,7 +54,8 @@ const userSchema = new mongoose.Schema({
     role:{
       type: Number,
       default: 0
-    }
+    },
+    //document: binary -->pdf below size 16mb
 
 },{timestamps: true});
 userSchema

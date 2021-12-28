@@ -2,6 +2,7 @@ const User = require("../models/user")
 const Ride = require("../models/ride")
 const Feedback = require("../models/feedback")
 const Invoice = require("../models/invoice")
+const Vehicle = require("../models/vehicle")
 
 exports.getUserById = (req,res, next, id)=>{
     User.findById(id).exec((err,user)=>{
@@ -24,7 +25,49 @@ exports.getUser = (req,res)=>{
     
     return res.json(req.profile);  
 }
+exports.addVehicle = (req,res)=>{
 
+    const vehicle = new Vehicle({
+        owner: req.profile._id,
+        name: req.body.vehicleName,
+        model: req.body.vehicleModel,
+        vehicleNumber: req.body.vehicleNumber,
+        numberOfSeats: req.body.vehicleNumberOfSeats,
+        driverLicenceNumber: req.body.driverLicenceNumber
+    })
+
+    vehicle.save((error, vehicle)=>{
+        if(error){
+            return res.status(400).json({
+                err: "Unable to add vehicle"
+            })
+        }
+        req.vehicle = vehicle;
+
+        User.findByIdAndUpdate(req.profile._id,{
+            $push: {
+                "vehicle": vehicle._id
+            }
+        },
+        {new: true, useFindAndModify: false },
+        (error, user)=>{
+            if(error){
+                return res.status(400).json({
+                    err: "Unable to add vehiclein user profile"
+                })
+            }
+
+            
+        })
+
+
+    })
+
+
+
+    // create new vehicle
+    // add vehicle in user's vehicle array
+}
 exports.getUserRides = (req,res)=>{
     Ride.find({$or : 
         [

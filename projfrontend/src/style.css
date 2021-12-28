@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+:root{
+    --color-sky: #CAEBF2;
+    --color-carbon: #A9A9A9;
+    --color-watermelon: #FF3B3F;
+    --color-neutral: #EFEFEF;
+    --color-aquamarine: #52ab98;
+    --color-teal: #2b6777;
+    
+}
+
+
+body{
+    background-color: var(--color-neutral);
+    font-family: 'Poppins', sans-serif;
+}
+.nav{
+    background-color: var(--color-sky);
+    color: var(--color-teal) ;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rideAlong{
+margin-left:2%;
+font-size: 2.2rem;
+ width: 20%;
+ text-align: center;
+}
+.logo{
+    margin: 4% 2% 0 0;
+    width: 30%;
+    border-radius: 40px;
+}
+.navList{
+    list-style-type: none;
+    margin-right: 2%;
+    display: flex;
+    color: var(--color-teal) ;
+    width: 50%;
+    justify-content: space-evenly;
+}
+.navList a{
+    padding: 2% 0 2% 0;
+}
+.navList a:hover {
+    -webkit-box-shadow: 0 8px 6px -6px var(--color-teal);
+    -moz-box-shadow: 0 8px 6px -6px var(--color-teal);
+         box-shadow: 0 8px 6px -6px var(--color-teal);
+}
+
+.title{
+    margin-top: 2%;
+    text-align: center;
+    color: var(--color-teal);
+    font-size: 1.5rem;
+
+}
+.container-main{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+} 
+.children{
+    width: 100%;
+/*     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+}
+.form-div-outer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.form-div-inner{
+    border: 2px solid var(--color-teal);
+    width: 70%;
+    font-size: 1.3rem;
+    text-align: center;
+    margin-top: 4%;
+    padding: 2%;
+    border-radius: 30px;
+}
+.form-group{
+    padding: 2%;
+}
+.btn-newaccount{
+    font-size: 0.8rem;
+}
+input{
+    border: 2px solid var(--color-teal);
+    border-radius: 20px;
+    background-color: var(--color-sky);
+    -webkit-box-shadow: 0 8px 6px -6px var(--color-teal);
+    -moz-box-shadow: 0 8px 6px -6px var(--color-teal);
+    box-shadow: 0 8px 6px -6px var(--color-teal);
+    padding: 0.8%;
+}
+.btn-submit{
+    background-color: var(--color-teal);
+    color: var(--color-neutral);
+    border: none;
+    border-radius: 40px;
+    padding: 1%;
+    font-size: 1rem;
+}
+.footer{
+    display: inline-block;
+    position: fixed;
+    bottom: 0;
+    height: 4vh;
+    width: 100%;
+    background-color: var(--color-teal);
+}
+.footer-text{
+    text-align: center;
+    color: var(--color-sky);
+}

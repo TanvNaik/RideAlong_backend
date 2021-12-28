@@ -1,12 +1,16 @@
-//Number of seats
 const mongoose = require("mongoose");
-const {ObjectId} = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 const vehicleSchema = mongoose.Schema({
+    owner: {
+        type: ObjectId,
+        ref: "User"
+    },
     name: String,
     model: String,
     vehicleNumber: String,
-    numberOfSeats = Number
+    numberOfSeats : Number,
+    driverLicenceNumber: String
 },{timestamps:true})
 
 

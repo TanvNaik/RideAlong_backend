@@ -6,12 +6,15 @@ const {signup, signin,signout, isSignedIn} = require("../controllers/authenticat
 
 // GET routes
 router.get("/signout", signout);
-
+/* 
 router.get("/test", isSignedIn, (req,res)=>{
     res.json(req.auth);
+}) */
+
+
+router.get("/test",  (req,res)=>{
+    res.json("hello from backend");
 })
-
-
 // POST routes
 router.post("/signin", 
     [
@@ -39,15 +42,15 @@ router.post("/signup", [
 
     check("email")
     .isEmail()
-    .withMessage("Email is required"),
+    .withMessage("Enter valid email-id"),
 
     check("password")
     .isLength({min: 6})
-    .withMessage("Password should be atleast 6 characters"),
+    .withMessage("Password must be minimum 6 characters including special symbol"),
 
     check("contact_number")
     .isLength({min: 10, max: 10})
-    .withMessage('Enter a valid contact number')
+    .withMessage('Mobile number should be 10 digits only')
 
 ], signup )
 
