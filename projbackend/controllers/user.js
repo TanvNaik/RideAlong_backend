@@ -55,18 +55,27 @@ exports.addVehicle = (req,res)=>{
                 return res.status(400).json({
                     err: "Unable to add vehiclein user profile"
                 })
-            }
-
-            
+            }  
         })
-
-
     })
+}
 
-
-
-    // create new vehicle
-    // add vehicle in user's vehicle array
+//TODO:
+exports.verifyUser = (req,res) =>{
+    const userId = req.body.userId;
+    
+    User.findByIdAndUpdate(userId, {verified: true}, {new: true}, (err, user) =>{
+        if(err){
+            return res.status(400).json({
+                error: "Unable to verify the user"
+            })
+        }
+        else{
+            return res.status(200).json({
+                message: "User Verified Succesfully"
+            })
+        }
+    })
 }
 exports.getUserRides = (req,res)=>{
     Ride.find({$or : 
@@ -121,6 +130,39 @@ exports.getUserPayments = (req,res)=>{
             payments: payments
         })
     })
+}
+exports.showPendingVerifications = (req,res) =>{
+
+/*     User.find({documentsVerificationStatus: false},
+    (error, users) => {
+        if(error){
+            return res.status(400).json({
+                error: "Unable to load users"
+            })
+        }
+        return res.json(users)
+    }) */
+    User.find({documentsVerificationStatus: false}).exec((err, users) => {
+        if (err) {
+          return res.status(400).json({
+            error: "NO Users found"
+          });
+        }
+        res.json({
+            users: users
+        });
+      });
+
+
+   /*  User.find({documentsVerificationStatus: false},{ _id, name, document, documentsVerificationStatus})
+    .exec((error, user) => {
+        if(error){
+            return res.status(400).json({
+                error: "Unable to load users"
+            })
+        }
+        return res.json(user)
+    }) */
 }
 // FEEDBACKS
 exports.getUserFeedBacks = (req,res)=>{

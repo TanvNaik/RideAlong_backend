@@ -13,6 +13,19 @@ exports.getRideById = (req,res, next, id)=>{
         next();
     })
 }
+exports.getAllRides= (req,res) =>{
+    
+    Ride.find({}, { sourceLocation, destinationLocation, seats, fare, startTime}).then(rides => {
+        return res.json({
+            rides: rides
+        })
+    })
+    .catch( err => {
+        return res.status(404).json({
+            error: "Unable to load rides"
+        })
+    })
+}
 
 exports.getRidesByLocations = (req,res)=>{
     Ride.find(

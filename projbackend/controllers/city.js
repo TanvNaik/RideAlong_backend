@@ -13,6 +13,16 @@ exports.getCityById = (req,res,next,id) => {
 
 }
 
+exports.getAllCities = (req,res) => {
+    City.find().exec((err, cities) =>{
+        if(err || !cities){
+            return res.status(400).json({
+                error: "Unable to load cities"
+            })
+        }
+        return res.json({cities})
+    })
+}
 exports.addcity = (req,res) =>{
     const city = new City({
         name: req.body.cityName,

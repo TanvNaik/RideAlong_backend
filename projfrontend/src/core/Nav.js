@@ -1,6 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { Link } from 'react-router-dom';
+import { isAuthenticated, signout } from '../authentication/helper'
+
 
 const Nav = () => {
+    /* const [user, setuser] = useState({
+        userId: "",
+        token: ""
+    }) */
+    const user = isAuthenticated();
     return (
         <div className='nav'>
             <h1 className="rideAlong">
@@ -8,9 +16,24 @@ const Nav = () => {
                 RideAlong
             </h1>
             <ul className='navList'>
-                <li><a href="#">About</a></li>
+                <li><a href="#footer">About</a></li>
                 <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Sign Up</a></li>
+                {isAuthenticated() && (
+                    
+                    <li><Link to="/" onClick={() => {
+                        signout();
+                      }}>SignOut</Link></li>
+
+                )}
+                {!isAuthenticated() && (
+                    <>
+                    <li><Link to={"./signup"}>Sign Up</Link></li>
+                    <li><Link to={"../"}>Login</Link></li>
+                    </>
+
+                )}
+                
+
             </ul>
         </div>
     )

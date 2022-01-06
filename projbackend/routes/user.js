@@ -6,7 +6,8 @@ const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentic
 const {
     getUserById, getUserFeedBacks,getUserRides, getUser, 
     updateUser,writeFeedback, setFeedbackReceiver, 
-    setFeedbacker,getUserPayments, addVehicle
+    setFeedbacker,getUserPayments, addVehicle,
+    verifyUser, showPendingVerifications
 } = require("../controllers/user")
 
 // PARAMs
@@ -26,5 +27,11 @@ router.put("/user/:userId", isSignedIn, isAuthenticated,updateUser);
 // POST
 router.post("/writeFeedback/feedbacker/:feedbacker/feedbackReciever/:feedbackReceiver", isSignedIn, isAuthenticated, writeFeedback)
 router.post("/addVehicle/user/:userId", addVehicle) //TODO: check this route
+
+
+//Admin
+router.get("/pendingUserVerifications/:userId", isSignedIn, isAuthenticated, isAdmin, showPendingVerifications)
+router.put("/verify-user/:userId", isSignedIn, isAuthenticated, isAdmin, verifyUser);
+
 
 module.exports = router;

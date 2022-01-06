@@ -15,13 +15,16 @@ const {
     createRide,
     updateRide,
     getRidesByLocations,
-    deleteRide
+    deleteRide,
+    getAllRides
 } = require("../controllers/ride")
 
 // PARAMs
 router.param("userId", getUserById);
 router.param("rideId", getRideById);
 
+// GET
+router.get("/getAllRides", isSignedIn, isAuthenticated, getAllRides)
 
 // POST
 router.post("/createRide/:userId", isSignedIn, isAuthenticated, createRide);

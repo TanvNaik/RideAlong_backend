@@ -17,10 +17,10 @@ const Base = ({
                     {children}
                 </div>
             </div>
-            <div className="footer">
+            <div className="footer" id='footer'>
                 <div className="footer-text">
-                CopyRight @Tanvi Naik
-                    </div>
+                    about us
+                </div>
             </div>
         </div>
     )

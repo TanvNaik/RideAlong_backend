@@ -48,16 +48,21 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     profile_pic:{
-        data: Buffer,
-        contentType: String
+        type: String
     },
     role:{
       type: Number,
       default: 0
     },
-    //document: binary -->pdf below size 16mb
-
+    document: {
+      type: String
+    },
+    documentsVerificationStatus: {
+      type: Boolean,
+      default: false
+    }
 },{timestamps: true});
+
 userSchema
   .virtual("password")
   .set(function (password) {
