@@ -5,126 +5,34 @@ const expressJwt = require('express-jwt');
 
 
 exports.signup = (req,res) => {
-    //req.files contains the array of file
 
     const errors = validationResult(req);
 
     // checking for validation errors
     if(!errors.isEmpty()){
         return res.status(422).json({
-            error: errors.array()[0].msg,
+            error: errors.array()[0].msg
         })//422- Unprocessable entity
     }
- 
+
 
     const user = new User(req.body);
-    user.document = req.files[1].filename;
-    user.profile_pic = req.files[0].filename;
+    user.document = req.files.document[0].filename;
+    user.profile_pic = req.files.pp[0].filename;
 
     user.save((err, user) => {
         if(err){
             return res.status(400).json({
-                error: err /*"Unable to add user in Database"*/
+                error: "Unable to add user in Database" //check error code(for email and username) and send response accordingly
             })
         }
         return res.json({
             name: user.name,
             email: user.email,
             id: user._id,
-            profile_pic: user.profile_pic,
-            document: user.document
         })
     })
 
-
-
-/*     let form = new formidable.IncomingForm();
-    form.keepExtension = true;
- */
-/*     form.parse(req, (err, fields, file) =>{
-        if(err){
-            return res.status(400).json({
-                error: "Not a valid file"
-            })
-        }
-
-        const {name, username, password, email, contact_number, document} =fields;
-
-        if(
-            !name ||
-            !username || 
-            !password ||
-            !email || 
-            !contact_number 
-        ){
-            return res.status(400).json({
-                error: "Please fill required fields"
-            })
-        }
-
-        let user = new User(fields);
-
-
-
-        //handling files 
-        //size check
-        if(file.document){
-            // approx 3mb
-            if(file.document.size > 3000000){
-                return res.status(400).json({
-                    error: "File size too big!"
-                })
-            }
-            user.document.data = fs.readFileSync(file.document.filepath);
-            user.document.contentType = file.document.type;
-        }
-
-        //saving user in DB
-        user.save((err, user) => {
-            if(err){
-                return res.status(400).json({
-                    error: "Unable to add user in Database"
-                })
-            }
-            return res.json({
-                name: user.name,
-                email: user.email,
-                id: user._id,
-                document: user.document,
-
-            })
-        })
-
-
-
-    }) */
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-    // create a user
-    const user = new User(req.body);
-    user.save((err,user) => {
-        if(err){
-            return res.status(400).json({
-                error: "User already exist"
-            });
-        }
-        res.json({
-            name: user.name,
-            email: user.email,
-            id: user._id
-        })
-    }) */
 }
 
 exports.signin = (req,res) => {
@@ -159,8 +67,10 @@ exports.signin = (req,res) => {
         const token = jwt.sign({_id: user._id},process.env.SECRET)
         res.cookie("token", token, {expire: new Date() + 5});
         // sending response to frontend
-        const {_id, name, email, role} = user;
-        return res.json({token, user: {_id, name, email, role}})
+
+        user.encry_password = ""
+        user.salt = ""
+        return res.json({user,token})
     }))
 
 }

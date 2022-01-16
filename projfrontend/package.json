@@ -2,6 +2,7 @@
   "name": "projfrontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://192.168.1.209:8800",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^11.2.7",
@@ -9,6 +10,7 @@
     "axios": "^0.24.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-modal": "^3.14.4",
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"

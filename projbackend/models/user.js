@@ -14,13 +14,17 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true,
       maxlength: 32,
-      trim: true
+      trim: true,
+      unique: true
     },
     email:{
         type: String,
       trim: true,
       required: true,
       unique: true
+    },
+    gender:{
+      type: String
     },
     encry_password:{
         type: String,
@@ -57,9 +61,10 @@ const userSchema = new mongoose.Schema({
     document: {
       type: String
     },
-    documentsVerificationStatus: {
+    verificationStatus: {
       type: Boolean,
-      default: false
+      default: false,
+      required: true
     }
 },{timestamps: true});
 

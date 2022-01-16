@@ -3,6 +3,7 @@ import { isAuthenticated } from '../authentication/helper';
 import { API } from '../backend';
 import Base from '../core/Base';
 import { addCity } from './helper/adminapicalls';
+/* D O N E */
 
 const AddCity = () => {
 
@@ -27,14 +28,15 @@ const AddCity = () => {
         setValues({...values, loading: true})
 
         addCity(user._id, token, {cityName, cityLatitude, cityLongitude})
-        .then(response => {
-            if(response.data.error){
-                setValues({...values, error: response.data.error, loading: false});
+        .then(data => {
+            console.log(data)
+            if(data.error){
+                setValues({...values, error: data.error, loading: false});
             }else{
                 setValues({...values, success: true, loading: false})
             }
         })
-        .catch(err => console.log("AddCity request failed!")) 
+        .catch(err => console.log("AddCity request failed!"))  
     }
     const loadingMessage = () =>{
         if(loading){
@@ -45,10 +47,10 @@ const AddCity = () => {
             )
         }
     }
-    const succesMessage = () => {
+    const successMessage = () => {
         if(success){
             return (
-                <div className="succesMessage">
+                <div className="successMessage">
                     <h2>City Added Succesfully</h2>
                 </div>
             )
@@ -91,7 +93,7 @@ const AddCity = () => {
     return (
         <Base title="Add City">
             {loadingMessage()}
-            {succesMessage()}
+            {successMessage()}
             {errorMessage()}
             {addCityForm()}            
         </Base>

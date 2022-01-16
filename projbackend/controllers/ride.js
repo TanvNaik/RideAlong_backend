@@ -1,5 +1,6 @@
+const { validationResult } = require("express-validator");
 const Ride = require("../models/ride")
-
+const User = require("../models/user")
 
 
 exports.getRideById = (req,res, next, id)=>{
@@ -26,7 +27,14 @@ exports.getAllRides= (req,res) =>{
         })
     })
 }
-
+exports.requestRide = (req,res)=>{
+    Ride.findByIdAndUpdate(req.ride._id,
+        {
+            $push:{
+                "requests": req.profile._id
+            }
+        })
+}
 exports.getRidesByLocations = (req,res)=>{
     Ride.find(
         {
@@ -46,16 +54,49 @@ exports.getRidesByLocations = (req,res)=>{
         })
 }
 exports.createRide = (req,res)=>{
-    const ride = new Ride(req.body);
 
-    ride.save((error, ride) =>{
-        if(error){
+    const errors = validationResult(req);
+
+    // checking for validation errors
+    if(!errors.isEmpty()){
+        return res.status(422).json({
+            error: errors.array()[0].msg
+        })//422- Unprocessable entity
+    }
+
+
+    if(req.profile.verificationStatus !== true){
+        return res.status(400).json({
+            error: "Documents needs to be verified by admin before posting a ride"
+        })
+    }
+    const ride = new Ride(req.body);
+    ride.driverUser = req.profile._id
+    
+
+    ride.save((err, ride) =>{
+        if(err){
             return res.status(400).json({
-                error: "Cannot save the Ride"
+                error: `${err}`
             })
         }
-        res.json({
-            ride: ride
+        req.ride = ride;
+
+        User.findByIdAndUpdate(req.profile._id,{
+            $push: {
+                "rides": ride._id
+            }
+        },
+        {new: true, useFindAndModify: false },
+        (error, user)=>{
+            if(error){
+                return res.status(400).json({
+                    err: "Unable to add ride in user profile"
+                })
+            }
+            return res.json({
+                message: "Ride added successfully"
+            })  
         })
     })
 }

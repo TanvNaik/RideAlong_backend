@@ -9,15 +9,22 @@ const rideSchema = mongoose.Schema({
     passengers: Array,
     sourceLocation:{
         type: ObjectId,
-        ref: "City"
+        ref: "City",
+        required: true
     },
     destinationLocation:{
         type: ObjectId,
-        ref: "City"
+        ref: "City",
+        required: true
+    },
+    requests: {
+        type:Array,
+        default: []
     },
     vehicle:{
         type: ObjectId,
-        ref: "Vehicle"
+        ref: "Vehicle",
+        required: true
     },
     seats:Number,
     startTime: Date,

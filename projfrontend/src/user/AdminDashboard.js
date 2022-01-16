@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { isAuthenticated } from '../authentication/helper'
 import Base from '../core/Base'
 
 const AdminDashboard = () => {
@@ -9,6 +10,7 @@ const AdminDashboard = () => {
         redirect: false
     })
 
+    const {user,token} = isAuthenticated();
     const handleClick = (name) => (event) =>{
         setValues({...values, path: `/${event.target.id}`, redirect: true})
     } 
@@ -21,16 +23,30 @@ const AdminDashboard = () => {
  
     return (
         <Base title='Welcome to Admin Dashboard'>
-            <div className="form-div-outer">
-                <div></div>
-                <div className="form-div-inner admin-div">
+            <div className="form-div-outer admin-dash">
+                <div className="form-div-inner admin-form ">
                     <br/>
-                    <button className="btn-submit btn-admin" id='add' onClick={handleClick("add")}>Add City</button> <br/><br/>
-                    <button className="btn-submit btn-admin" id='delete' onClick={handleClick("delete")}>Delete City</button> <br/><br/>
+                    <button className="btn-submit btn-admin" id='add-city' onClick={handleClick("add-city")}>Add City</button> <br/><br/>
+                    <button className="btn-submit btn-admin" id='delete-city' onClick={handleClick("delete-city")}>Delete City</button> <br/><br/>
                     <button className="btn-submit btn-admin" id='user-verification' onClick={handleClick("user-verification")}>Verify Users</button> 
                     <br />
                 </div>
-                <div></div>
+                <div className='admin-div'>
+                    <div className='profile-pic'>{
+                        user.profile_pic && (
+                            <img src={`http://192.168.1.209:8800/image/${user.profile_pic}`} />
+                        )
+                    }{
+                        (!user.profile_pic && (
+                            <img src={`http://192.168.1.209:8800/image/default_female_pp.png`} />
+                        ))}
+                    </div><br/>
+                   <div>Name: {user.name}</div> 
+                   <div>Email: {user.email} </div>
+                   <div>Username: {user.username} </div>
+                   <div>Role: Admin </div>
+                  
+                </div>
             </div>
             {performRedirect()}
         </Base>

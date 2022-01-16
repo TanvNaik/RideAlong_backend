@@ -1,24 +1,8 @@
-import axios from "axios";
 import { API } from "../../backend";
 
 export const signup = (user)=>{
-
-    /* return axios({
-        method: "post",
-        url: `${API}/signup`,
-        data: user,
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then((response)=> {
-            console.log(response)
-          return response
-        })
-        .catch( (error) => {
-            console.log(error)
-          return error
-        }); */
         
-    return fetch(`${API}/signup`, {
+    return fetch(`/api/signup`, {
         method: "POST",
         headers: {
             Accept : "application/json"
@@ -27,7 +11,7 @@ export const signup = (user)=>{
     })
     .then((response)=>{
         console.log(response)
-        return response.json();
+        return response.json()
     })
     .catch((err)=>{
         console.log(err)
@@ -37,7 +21,7 @@ export const signup = (user)=>{
 
 export const signin = (user)=>{
 
-    return fetch(`${API}/signin`,{
+    return fetch(`/api/signin`,{
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -69,7 +53,7 @@ export const signout = (next)=>{
         next();
     }
 
-    return fetch(`${API}/signout`,{
+    return fetch(`/api/signout`,{
         method: "GET"
     })
     .then(response =>  "Signout Success")

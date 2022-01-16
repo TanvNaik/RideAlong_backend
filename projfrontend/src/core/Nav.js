@@ -19,6 +19,9 @@ const Nav = () => {
                 <li><a href="#footer">About</a></li>
                 <li><a href="#">Contact Us</a></li>
                 {isAuthenticated() && (
+                    <li><Link to="/user-dashboard">Profile</Link></li>
+                )}
+                {isAuthenticated() && (
                     
                     <li><Link to="/" onClick={() => {
                         signout();
@@ -32,8 +35,8 @@ const Nav = () => {
                     </>
 
                 )}
-                
 
+            
             </ul>
         </div>
     )

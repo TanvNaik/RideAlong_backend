@@ -3,6 +3,10 @@ const Ride = require("../models/ride")
 const Feedback = require("../models/feedback")
 const Invoice = require("../models/invoice")
 const Vehicle = require("../models/vehicle")
+const { check, validationResult } = require('express-validator');
+
+
+
 
 exports.getUserById = (req,res, next, id)=>{
     User.findById(id).exec((err,user)=>{
@@ -27,14 +31,21 @@ exports.getUser = (req,res)=>{
 }
 exports.addVehicle = (req,res)=>{
 
-    const vehicle = new Vehicle({
-        owner: req.profile._id,
-        name: req.body.vehicleName,
-        model: req.body.vehicleModel,
-        vehicleNumber: req.body.vehicleNumber,
-        numberOfSeats: req.body.vehicleNumberOfSeats,
-        driverLicenceNumber: req.body.driverLicenceNumber
-    })
+    const errors = validationResult(req);
+
+    // checking for validation errors
+    if(!errors.isEmpty()){
+        return res.status(422).json({
+            error: errors.array()[0].msg,
+        })//422- Unprocessable entity
+    }
+
+    const vehicle = new Vehicle(req.body);
+    vehicle.owner = req.profile._id;
+    vehicle.license = req.files.license[0].filename;
+    vehicle.vehicleInsurance = req.files.vehicleInsurance[0].filename;
+    vehicle.vehicleRC = req.files.vehicleRC[0].filename;
+
 
     vehicle.save((error, vehicle)=>{
         if(error){
@@ -53,18 +64,36 @@ exports.addVehicle = (req,res)=>{
         (error, user)=>{
             if(error){
                 return res.status(400).json({
-                    err: "Unable to add vehiclein user profile"
+                    err: "Unable to add vehicle in user profile"
                 })
-            }  
+            }
+            return res.json({
+                message: "Vehicle added successfully"
+            })  
         })
     })
 }
 
-//TODO:
+exports.getUserVehicles = (req, res) => {
+
+    Vehicle.find({owner: req.profile._id})
+    .exec((err, vehicles) => {
+        if(err || !vehicles){
+            return res.status(400).json({
+                error: "No vehicles found"
+            })
+        }
+        return res.json({
+            vehicles: vehicles
+        })
+    })
+
+}
+
 exports.verifyUser = (req,res) =>{
     const userId = req.body.userId;
     
-    User.findByIdAndUpdate(userId, {verified: true}, {new: true}, (err, user) =>{
+    User.findByIdAndUpdate(userId, {verificationStatus: true}, {new: true}, (err, user) =>{
         if(err){
             return res.status(400).json({
                 error: "Unable to verify the user"
@@ -93,7 +122,9 @@ exports.getUserRides = (req,res)=>{
                 error: "No Rides Found"
             })
         }
-        return res.json(rides);
+        return res.json({
+            rides: rides
+        });
     })
 }
 

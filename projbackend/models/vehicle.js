@@ -6,11 +6,12 @@ const vehicleSchema = mongoose.Schema({
         type: ObjectId,
         ref: "User"
     },
-    name: String,
+    namePlate: String,
     model: String,
-    vehicleNumber: String,
-    numberOfSeats : Number,
-    driverLicenceNumber: String
+    numberOfSeats : Number, 
+    license: String,
+    vehicleInsurance: String,
+    vehcileRC: String
 },{timestamps:true})
 
 

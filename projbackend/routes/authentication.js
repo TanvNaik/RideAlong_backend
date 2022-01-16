@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const multer = require("multer");
-const {signup, signin,signout, isSignedIn} = require("../controllers/authentication")
-
+const {signup, signin,signout, isSignedIn} = require("../controllers/authentication");
+const path = require("path")
 
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) =>{
-        cb(null,"./images")  
+        cb(null,path.join(__dirname, "../uploads/images"))  
     },
     filename: (req,file,cb) =>{
         cb(null, Date.now() + "--" + file.originalname)
@@ -15,14 +15,13 @@ const fileStorageEngine = multer.diskStorage({
 })
 const upload = multer({storage: fileStorageEngine})
 
-
 // GET routes
-router.get("/signout", signout);
-
-
+router.get("/signout", signout); 
 router.get("/test",  (req,res)=>{
     res.json("hello from backend");
 })
+
+
 // POST routes
 router.post("/signin", 
     [
@@ -35,12 +34,19 @@ router.post("/signin",
         .withMessage("Password field is required")
     ],
     signin
-)
-
-router.post("/signup",   upload.array("images",2), [
+) 
+router.post("/signup", upload.fields([{
+    name: 'pp', maxCount: 1
+  }, {
+    name: 'document', maxCount: 1
+  }]), [
     check("name")
     .isLength({min: 3})
     .withMessage("Name should be atleast 3 characters"),
+
+    check("gender")
+    .isLength({min: 1})
+    .withMessage("Gender is Required"),
 
     check("username")
     .isAlphanumeric()

@@ -10,9 +10,9 @@ const Signup = () => {
         username: "",
         password: "",
         cfPassword: "",
-        profile_pic: "",
-        images: [],
+        pp: "",
         document: "",
+        gender:"",
         contact_number: "",
         error: false,
         loading: false,
@@ -27,8 +27,8 @@ const Signup = () => {
         password,
         cfPassword,
         document,
-        profile_pic,
-        images,
+        pp,
+        gender,
         contact_number,
         error,
         loading,
@@ -39,7 +39,6 @@ const Signup = () => {
 
     const performRedirect = () =>{
         if(didRedirect){
-            console.log("redirect")
             return <Navigate to="../"/>
         }
     }
@@ -55,14 +54,14 @@ const Signup = () => {
     const onSubmit = (event) =>{
         event.preventDefault();
 
+        if(!(password === cfPassword)){
+            setValues({...values,error: "Password and Confirm Password should match"})
+        }
 
-        setValues({...values, error: "",images: [profile_pic, document] ,loading: true});
-        formData.set(images, images)
+        setValues({...values, error: "",loading: true});
         signup(formData)
         .then(data => {
-            console.log(data)
             if(data.error){
-                console.log("error",data.error)
                 setValues({...values, error: data.error, loading:false})
             }
             else{
@@ -76,7 +75,8 @@ const Signup = () => {
     }
 
     const handleChange = (name) => (event) =>{
-        const value = name === "document" ? event.target.files[0] : event.target.value;
+        const value = (name === "document" || name === "pp")? event.target.files[0] : event.target.value;
+        
         formData.set(name,value)
         setValues({...values, [name]: value})
     }
@@ -88,15 +88,15 @@ const Signup = () => {
                 <div className='form-div-inner'>
                     <form >
                         <div className="form-group">
-                            <label htmlFor="profile_pic">Profile Pic: </label>
+                            <label htmlFor="pp">Profile Pic: </label>
                             <input
                             style={{border: "none", boxShadow:"none"}}
                                 type="file"
-                                name="profile_pic"
-                                id='profile_pic'
-                                required="true"
+                                name="pp"
+                                id='pp'
+                                required={true}
                                 accept='image/*'
-                                onChange={handleChange("profile_pic")}
+                                onChange={handleChange("pp")}
                             />         
                         </div>
                         <div className="form-group">
@@ -105,7 +105,7 @@ const Signup = () => {
                             <input 
                             type="text"
                             id='name' 
-                            required="true"
+                            required={true}
                             onChange={handleChange("name")}
                             />
                         </div>
@@ -115,7 +115,7 @@ const Signup = () => {
                             <input 
                             type="text"
                             id='username'
-                            required="true" 
+                            required={true}
                             onChange={handleChange("username")}
                             />
                         </div>
@@ -124,7 +124,7 @@ const Signup = () => {
                             <input 
                             type="email" 
                             id="email" 
-                            required="true"
+                            required={true}
                             onChange={handleChange("email")}
                             />
                         </div>
@@ -133,7 +133,7 @@ const Signup = () => {
                             <input 
                             type="password" 
                             id='password' 
-                            required="true"
+                            required={true}
                             onChange={handleChange("password")}
                             />
                         </div>
@@ -141,17 +141,24 @@ const Signup = () => {
                             <label htmlFor="cf-password">Confirm Password: </label>
                             <input 
                             type="password" 
-                            required="true"
+                            required={true}
                             id='cf-password'
                             onChange={handleChange("cfPassword")} 
                             />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="gender">
+                                Gender: </label> 
+                            
+                            <input type="radio" value="Male" name="gender" onChange={handleChange("gender")} /> Male
+                            <input type="radio" value="Female" name="gender" onChange={handleChange("gender")} /> Female
                         </div>
                         <div className="form-group">
                             <label htmlFor="mob-number">Mobile number: </label>
                             <input 
                             type="text" 
                             id='mob-number'
-                            required="true"
+                            required={true}
                             onChange={handleChange("contact_number")} 
                             />
                         </div>
@@ -162,13 +169,14 @@ const Signup = () => {
                                 type="file"
                                 name="document"
                                 id='document'
-                                required="true"
+                                required={true}
                                 accept='image/*'
                                 onChange={handleChange("document")}
                             />         
                         </div>
                         <button className="btn-submit" onClick={onSubmit}>SignUp</button>
                     </form>
+                    <div></div>
                 </div>
                 <div></div>
             </div>

@@ -40,14 +40,6 @@ const SignIn = () => {
             }
         })
         .catch((err)=>console.log("Signin request failed!"))
-        /* try{
-            const response = await axios.post(`${API}/signin`,{username,password});
-            authenticate(response.data);
-            setValues({...values, error: response.data.err.msg, loading:false, didRedirect: true})
-
-        }catch(err){
-            console.log(err.msg)
-        } */
         
     }
 
@@ -104,12 +96,6 @@ const SignIn = () => {
                 <div className="placeholder"></div>
 
             </div>
-        )
-    }
-
-    const redirectToSignUp = () =>{
-        return (
-            <Link to={"/signup"} />
         )
     }
     return (

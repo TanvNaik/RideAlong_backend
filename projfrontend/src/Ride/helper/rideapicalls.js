@@ -1,7 +1,5 @@
-import { API } from "../../backend"
-// 25 5 25 25 15 15
 export const getAllRides = () =>{
-    return fetch(`${API}/getAllRides`,{
+    return fetch(`/api/getAllRides`,{
         method: "GET"
     }).then(response => {
         return response.json();
@@ -10,21 +8,21 @@ export const getAllRides = () =>{
 }
 
 export const getAllCities = () =>{
-    return fetch(`${API}/getAllCities`,{
+    return fetch(`/api/getAllCities`,{
         method: "GET"
     }).then(response => response.json())
     .catch(err => err)
 }
 
 export const createRide = (ride, userId, token) => {
-    return fetch(`${API}/createRide/${userId}`, {
+    return fetch(`/api/createRide/${userId}`, {
         method: "POST",
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: ride
+        body: JSON.stringify(ride)
     }).then( response => {
         return response.json();
     })
