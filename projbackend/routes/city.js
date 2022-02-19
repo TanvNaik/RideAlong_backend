@@ -25,7 +25,6 @@ router.param("cityId",getCityById)
 router.get("/getAllCities", getAllCities)
 router.get("/city-names/:sourceId/:destinationId", getCityNames)
 
-
 // POST
 router.post("/city/:userId", isSignedIn, isAuthenticated, isAdmin, addcity)
 

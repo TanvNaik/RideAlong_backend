@@ -6,7 +6,10 @@ const rideSchema = mongoose.Schema({
         type: ObjectId,
         ref: "User"
     },
-    passengers: Array,
+    passengers: {
+        type: [mongoose.Schema.ObjectId], 
+        ref: 'User', 
+    },
     sourceLocation:{
         type: ObjectId,
         ref: "City",
@@ -18,7 +21,8 @@ const rideSchema = mongoose.Schema({
         required: true
     },
     requests: {
-        type:Array,
+        type: [mongoose.Schema.ObjectId], 
+        ref: 'User', 
         default: []
     },
     vehicle:{
@@ -28,7 +32,12 @@ const rideSchema = mongoose.Schema({
     },
     seats:Number,
     startTime: Date,
-    fare: Number
+    fare: Number,
+    payments: {
+        type: [mongoose.Schema.ObjectId], 
+        ref: 'User', 
+        default: []
+    }
     
 },{timestamps:true})
 

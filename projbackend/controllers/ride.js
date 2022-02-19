@@ -4,7 +4,9 @@ const User = require("../models/user")
 
 
 exports.getRideById = (req,res, next, id)=>{
-    Ride.findById(id).exec((error,ride)=>{
+    Ride.findById(id)
+    .populate('sourceLocation driverUser destinationLocation requests passengers payments')
+    .exec((error,ride)=>{
         if(error || !ride){
             return res.status(400).json({
                 error: "Unable to find ride"
@@ -14,16 +16,29 @@ exports.getRideById = (req,res, next, id)=>{
         next();
     })
 }
+exports.getRide = (req,res) => {
+    return res.json({
+        ride: req.ride
+    })
+}
 exports.getAllRides= (req,res) =>{
     
-    Ride.find({}, { sourceLocation, destinationLocation, seats, fare, startTime}).then(rides => {
+    let limit = req.query.limit ? parseInt(req.query.limit) : 9
+
+    let sortBy = req.query.sortBy ? req.query.sortBy : "createdAt"
+
+    Ride.find()
+    .sort([[sortBy, 'descending']])
+    .populate('sourceLocation destinationLocation driverUser')
+    .limit(limit)
+    .exec((err, rides) => {
+        if(err){
+            return res.status(400).json({
+                error: "No rides found"
+            })
+        }
         return res.json({
             rides: rides
-        })
-    })
-    .catch( err => {
-        return res.status(404).json({
-            error: "Unable to load rides"
         })
     })
 }
@@ -33,7 +48,17 @@ exports.requestRide = (req,res)=>{
             $push:{
                 "requests": req.profile._id
             }
-        })
+        },
+        {new: true, useFindAndModify: false },
+        (err, ride) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Unable to request ride"
+                })
+            }
+            return res.json({ride: ride})
+        }
+        ) 
 }
 exports.getRidesByLocations = (req,res)=>{
     Ride.find(
@@ -95,32 +120,13 @@ exports.createRide = (req,res)=>{
                 })
             }
             return res.json({
-                message: "Ride added successfully"
+                message: "Ride posted successfully"
             })  
         })
     })
 }
 
-exports.updateRide = (req,res)=>{
 
-    
-    Ride.findByIdAndUpdate(
-        req.ride._id,
-        {
-            seats: req.body.seats,
-            $push: { "passengers": req.body.passengers}
-        },
-        {new: true},
-        (err,ride)=>{
-            if(err){
-                return res.status(400).json({
-                    error: "Cannot update the ride"
-                })
-            }
-
-            return res.json(ride)
-        })
-}
 exports.deleteRide = (req,res)=>{
     
     const ride = req.ride;
@@ -135,4 +141,86 @@ exports.deleteRide = (req,res)=>{
             deletedRide: deletedRide
         })
     })
+}
+
+exports.rejectRideRequest = (req,res) => {
+    Ride.findByIdAndUpdate(
+        req.ride._id,
+        {
+            $pull: { "requests": req.params.rejectId}
+        },
+        {new: true},
+        (err,ride)=>{
+            if(err){
+                return res.status(400).json({
+                    error: "Cannot reject the request"
+                })
+            }
+            return res.json(ride)
+        })
+
+}
+
+
+exports.approveRideRequest = (req,res) => {
+    Ride.findByIdAndUpdate(
+        req.ride._id,
+        {
+            $inc: {seats: -1},
+            $push: { "passengers": req.params.acceptId},
+            $pull: { "requests": req.params.acceptId}
+        },
+        {new: true},
+        (err,ride)=>{
+            if(err){
+                return res.status(400).json({
+                    error: "Cannot accept the request"
+                })
+            }
+
+            return res.json(ride)
+        })
+}
+exports.updatePayemtInRide = (req,res,next)=>{
+    Ride.findByIdAndUpdate(req.params.rideId,
+        {$push: { 'payments': req.body.sender}},
+        {new: true, useFindAndModify: false},
+        (err, ride) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Unable to pay for the ride"
+                })
+            }
+            res.locals.ride = ride
+            console.log("Done in ride")
+            next()
+        }
+    )
+}
+exports.removePassengerFromRide = (req,res) => {
+    Ride.findByIdAndUpdate(req.params.rideId, { $pull: { passengers: req.params.passengerId }}, {new: true, useFindAndModify: false},(err, ride) => {
+        if(err){
+            return res.status(400).json({
+                error: "Unable to remove passenger"
+            })
+        }
+        User.findByIdAndUpdate(
+            req.params.passengerId,
+            {
+                $pull: { "rides": req.params.rideId}
+            },
+            {new: true},
+            (err,user)=>{
+                if(err){
+                    return res.status(400).json({
+                        error: "Cannot remove passenger"
+                    })
+                }
+                return res.json({
+                    message: "Passenger removed successfully"
+                })
+            })
+    
+        
+    } )
 }

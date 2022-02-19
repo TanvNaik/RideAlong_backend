@@ -4,16 +4,19 @@ const {ObjectId} = mongoose.Schema;
 const invoiceSchema = mongoose.Schema({
     invoiceAmount: Number,
     sender:{
-        type: ObjectId,
-        ref: "User"
+        type: mongoose.Schema.ObjectId, 
+      ref: 'User', 
+
     },
     receiver:{
-        type: ObjectId,
-        ref: "User"
+        type: mongoose.Schema.ObjectId, 
+      ref: 'User', 
+
     },
     ride:{
-        type: ObjectId,
-        ref: "Ride"
+        type: mongoose.Schema.ObjectId, 
+      ref: 'Ride', 
+
     },
 
 },{timestamps:true})

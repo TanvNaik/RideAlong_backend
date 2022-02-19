@@ -19,7 +19,7 @@ const Base = ({
             </div>
             <div className="footer" id='footer'>
                 <div className="footer-text">
-                    about us
+                © Copyright RideAlong. All Rights Reserved
                 </div>
             </div>
         </div>

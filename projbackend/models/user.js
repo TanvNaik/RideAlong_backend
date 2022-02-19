@@ -32,20 +32,24 @@ const userSchema = new mongoose.Schema({
     },
     salt: String,
     vehicle:{
-        type: Array,
+      type: [mongoose.Schema.ObjectId], 
+      ref: 'Vehicle', 
         default: []
     },
     rides:{
-        type: Array,
+      type: [mongoose.Schema.ObjectId], 
+      ref: 'Ride', 
         default: []
     },
     payments:{
-        type: Array,
+      type: [mongoose.Schema.ObjectId], 
+      ref: 'Invoice', 
         default:[]
     },
     feedbacks:{
-        type: Array,
-        default:[]
+      type: [mongoose.Schema.ObjectId], 
+      ref: 'Feedback', 
+      default:[]
     },
     contact_number:{
         type: Number,

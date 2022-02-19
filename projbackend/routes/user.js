@@ -8,8 +8,7 @@ const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentic
 
 const {
     getUserById, getUserFeedBacks,getUserRides, getUser, 
-    updateUser,writeFeedback, setFeedbackReceiver, 
-    setFeedbacker,getUserPayments, addVehicle,
+    updateUser,writeFeedback,getUserPayments, addVehicle,
     verifyUser, showPendingVerifications,getUserVehicles
 } = require("../controllers/user")
 
@@ -26,11 +25,10 @@ const upload = multer({storage: fileStorageEngine})
 
 // PARAMs
 router.param("userId", getUserById)
-router.param("feedbacker", setFeedbacker)
-router.param("feedbackReceiver", setFeedbackReceiver)
+
 
 // GET
-router.get("/user/:userId", isSignedIn, getUser);
+router.get("/user/:userId/:findUser", isSignedIn, isAuthenticated, getUser);
 router.get("/feedbacks/user/:userId", getUserFeedBacks);
 router.get("/rides/user/:userId",getUserRides);
 router.get("/payments/user/:userId", getUserPayments)
@@ -40,7 +38,8 @@ router.get("/vehicles/user/:userId", isSignedIn, isAuthenticated, getUserVehicle
 router.put("/user/:userId", isSignedIn, isAuthenticated,updateUser);
 
 // POST
-router.post("/writeFeedback/feedbacker/:feedbacker/feedbackReciever/:feedbackReceiver", isSignedIn, isAuthenticated, writeFeedback)
+router.post("/writeFeedback/:feedbacker/:feedbackReceiver",  writeFeedback)
+
 router.post("/addVehicle/user/:userId",upload.fields([{
     name: "license", maxCount:1
 },{

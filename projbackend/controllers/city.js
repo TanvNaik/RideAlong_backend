@@ -38,6 +38,8 @@ exports.getCityNames = (req,res) => {
     
 }
 
+
+
 exports.getAllCities = (req,res) => {
     City.find().exec((err, cities) =>{
         if(err || !cities){

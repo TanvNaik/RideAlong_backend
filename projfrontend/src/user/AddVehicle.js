@@ -49,7 +49,7 @@ const AddVehicle = () => {
             if(data.error){
                 setValues({...values, error: data.error, loading: false})
             }else{
-                setValues({...values, loading:false, success: data.message })
+                setValues({...values, loading:false, success: data.message, error: "" })
             }
         })
     }

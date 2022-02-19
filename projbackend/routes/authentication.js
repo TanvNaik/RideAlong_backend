@@ -26,7 +26,7 @@ router.get("/test",  (req,res)=>{
 router.post("/signin", 
     [
         check("username")
-        .isLength({min:3})
+        .isLength({min:6})
         .withMessage("Enter valid username"),
         
         check("password")
@@ -50,17 +50,17 @@ router.post("/signup", upload.fields([{
 
     check("username")
     .isAlphanumeric()
-    .withMessage("Enter valid username")
     .isLength({min:6})
-    .withMessage("username must be atleast 6 characters"),
+    .withMessage("Username must be alphanumeric and  atleast 6 characters"),
 
     check("email")
     .isEmail()
     .withMessage("Enter valid email-id"),
 
     check("password")
-    .isLength({min: 6})
-    .withMessage("Password must be minimum 6 characters including special symbol"),
+    .isLength({min: 8})
+    .isAlphanumeric()
+    .withMessage("Password must be minimum 8 characters and alphanumeric"),
 
     check("contact_number")
     .isLength({min: 10, max: 10})

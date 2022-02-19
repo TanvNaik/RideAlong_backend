@@ -3,20 +3,25 @@ const router = express.Router();
 
 const {
     getInvoiceById,
-    addInvoice
+    addInvoice,
+    getRideInvoices
 } = require("../controllers/invoice")
 const {
     isSignedIn,
     isAuthenticated
-} = require("../controllers/authentication")
+} = require("../controllers/authentication");
+const { updatePayemtInRide } = require("../controllers/ride");
+const { updatePaymentInUser } = require("../controllers/user");
 
 
 // PARAMs
-router.param("invoiceId", getInvoiceById)
+router.param("/invoiceId", getInvoiceById)
 
+//GET
+router.get("/invoices/:rideId", getRideInvoices )
 
 // POST
-router.post("/create/invoice", isSignedIn, addInvoice);
+router.post("/create/invoice/:rideId/:userId",addInvoice,  updatePayemtInRide , updatePaymentInUser );
 
 
 module.exports = router;

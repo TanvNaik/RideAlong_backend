@@ -53,7 +53,7 @@ exports.signin = (req,res) => {
         // checking if user with given email exists
         if(err || !user){
             return res.status(400).json({
-                error: "Wrong credentials"
+                error: "Bad credentials"
             })
         }
 

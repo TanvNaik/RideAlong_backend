@@ -34,11 +34,11 @@ const AdminDashboard = () => {
                 <div className='admin-div'>
                     <div className='profile-pic'>{
                         user.profile_pic && (
-                            <img src={`http://192.168.1.209:8800/image/${user.profile_pic}`} />
+                            <img src={`http://localhost:8800/image/${user.profile_pic}`} />
                         )
                     }{
                         (!user.profile_pic && (
-                            <img src={`http://192.168.1.209:8800/image/default_female_pp.png`} />
+                            <img src={`http://localhost:8800/image/default_female_pp.png`} />
                         ))}
                     </div><br/>
                    <div>Name: {user.name}</div> 

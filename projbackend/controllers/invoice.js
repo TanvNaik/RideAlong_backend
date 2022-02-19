@@ -1,8 +1,11 @@
 const Invoice = require("../models/invoice")
 const User = require("../models/user")
-
+const Ride = require("../models/ride")
+const invoice = require("../models/invoice")
 exports.getInvoiceById = (req,res,next,id)=>{
-    Invoice.findById(id).exec((err,invoice)=>{
+    Invoice.findById(id)
+    .populate('sender receiver')
+    .exec((err,invoice)=>{
         if(err || !invoice){
             return res.status(400).json({
                 error: "Unable to find invoice"
@@ -13,44 +16,36 @@ exports.getInvoiceById = (req,res,next,id)=>{
     })
 }
 
-exports.addInvoice = (req,res)=>{
-    const invoice = new Invoice(req.body);
+exports.getRideInvoices = (req,res) => {
+    Invoice.find({'ride': req.params.rideId})
+    .populate("sender receiver").exec( (err, invoices) => {
+        if(err || !invoices){
+            return res.status(400).json({
+                error: "Unable to find invoice"
+            })
+        }
+        return res.json({
+            invoices: invoices
+        })
+    })
+}
+
+exports.addInvoice = (req,res,next)=>{
+    const invoice = new Invoice({
+        sender: req.body.sender,
+        receiver: req.body.receiver,
+        ride: req.body.ride,
+        invoiceAmount: req.body.invoiceAmount
+    });
     invoice.save((err,invoice)=>{
         if(err){
             return res.status(400).json({
                 error: "Cannot save the invoice"
             })
         }
-        User.findByIdAndUpdate(invoice.sender, 
-            {"$push" : { "payments": invoice._id}},
-            {new: true, useFindAndModify: false },
-            (err, user)=>{
-                if(err){
-                    return res.status(400).json({
-                        error: "Unable to update payment to sender"
-                    })
-                }
-                req.invoiceSender = user;
-            }
-            )
-        User.findByIdAndUpdate(invoice.receiver, 
-                {"$push" : { "payments": invoice._id}},
-                {new: true, useFindAndModify: false },
-                (err, user)=>{
-                    if(err){
-                        return res.status(400).json({
-                            error: "Unable to update payment to receiver"
-                        })
-                    }
-                    req.invoiceReceiver = user;
-
-                }
-                )
-
-        return res.json({
-            invoice: invoice,
-            sender: req.invoiceSender,
-            receiver: req.invoiceReceiver
-        })
+        res.locals.invoice = invoice
+        console.log("Done in Invoice")
+        // push payment in ride             
+        next()       
     })
 }

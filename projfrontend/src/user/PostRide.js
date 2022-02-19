@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { isAuthenticated } from '../authentication/helper';
 import Base from '../core/Base';
-import { createRide, getAllCities, getAllRides } from "../Ride/helper/rideapicalls";
+import { createRide, getAllCities } from "../Ride/helper/rideapicalls";
 import { getUserVehicles } from './helper/userapicalls';
 const PostRide = () => {
     const [values,setValues] = useState({
@@ -46,9 +46,10 @@ const PostRide = () => {
         
         getUserVehicles(user._id, token).then(data => {
             if(data.error) {
-                setValues({...values, error: data.error})
+                setValues({...values, error: "To post a ride, you must add a vehicle first"})
+               
             }else{
-                setValues({...values, vehicles: data.vehicles, cities: cities, vehicle: data.vehicles[0]._id, sourceLocation: cities[0]._id, destinationLocation: cities[0]._id})
+                    setValues({...values, vehicles: data.vehicles, cities: cities, vehicle: data.vehicles[0]._id, sourceLocation: cities[0]._id, destinationLocation: cities[0]._id})
             }
         })
 

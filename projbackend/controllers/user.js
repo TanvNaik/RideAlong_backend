@@ -21,14 +21,28 @@ exports.getUserById = (req,res, next, id)=>{
 }
 exports.getUser = (req,res)=>{
 
-    //hiding secured info
-    req.profile.salt = undefined;
-    req.profile.encry_password = undefined;
-    req.profile.createdAt = undefined;
-    req.profile.updatedAt = undefined;
+    User.findById(req.params.findUser).exec((err,user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error: "No user was found in DB"
+            });
+        }
+        req.driverUser = user;
+          //hiding secured info
+    req.driverUser.salt = undefined;
+    req.driverUser.encry_password = undefined;
+    req.driverUser.createdAt = undefined;
+    req.driverUser.updatedAt = undefined;
     
-    return res.json(req.profile);  
+    return res.json({
+        user: req.driverUser
+    });  
+    })
+
+  
 }
+
+
 exports.addVehicle = (req,res)=>{
 
     const errors = validationResult(req);
@@ -74,11 +88,12 @@ exports.addVehicle = (req,res)=>{
     })
 }
 
+
 exports.getUserVehicles = (req, res) => {
 
     Vehicle.find({owner: req.profile._id})
     .exec((err, vehicles) => {
-        if(err || !vehicles){
+        if(err || vehicles.length == 0){
             return res.status(400).json({
                 error: "No vehicles found"
             })
@@ -105,6 +120,9 @@ exports.verifyUser = (req,res) =>{
             })
         }
     })
+
+
+    
 }
 exports.getUserRides = (req,res)=>{
     Ride.find({$or : 
@@ -114,9 +132,15 @@ exports.getUserRides = (req,res)=>{
                 $in : 
                 [ req.profile._id ]
                 }
+            },
+            {"requests": {
+                $in : 
+                [ req.profile._id ]
+                }
             }
         ]
-    }).exec((err, rides)=>{
+    })
+    .populate('driverUser requests sourceLocation destinationLocation').exec((err, rides)=>{
         if(err || !rides){
             return res.json({
                 error: "No Rides Found"
@@ -184,16 +208,6 @@ exports.showPendingVerifications = (req,res) =>{
         });
       });
 
-
-   /*  User.find({documentsVerificationStatus: false},{ _id, name, document, documentsVerificationStatus})
-    .exec((error, user) => {
-        if(error){
-            return res.status(400).json({
-                error: "Unable to load users"
-            })
-        }
-        return res.json(user)
-    }) */
 }
 // FEEDBACKS
 exports.getUserFeedBacks = (req,res)=>{
@@ -202,7 +216,7 @@ exports.getUserFeedBacks = (req,res)=>{
         "_id": {
             $in: req.profile.feedbacks
         }
-    }, (error,feedbacks)=>{
+    }).populate("feedbacker").exec((error,feedbacks)=>{
         if(error){
             return res.status(400).json({
                 error: "Cannot find Feedbacks"
@@ -213,42 +227,12 @@ exports.getUserFeedBacks = (req,res)=>{
         })
     })
 }
-exports.setFeedbacker = (req,res,next,id)=>{
-    console.log(req.params)
-    User.findById(id).exec((err,user)=>{
-        if(err || !user){
-            return res.status(400).json({
-                error: "No user was found in DB"
-            });
-        }
-        req.profile = user;
 
-        //hiding secured info
-        req.profile.salt = undefined;
-        req.profile.encry_password = undefined;
-    })
-    next();
-}
-exports.setFeedbackReceiver = (req,res, next, id)=>{
-    User.findById(id).exec((err,user)=>{
-        if(err || !user){
-            return res.status(400).json({
-                error: "No user was found in DB"
-            });
-        }
-        req.feedbackReceiver = user;
-
-        //hiding secured info
-        req.feedbackReceiver.salt = undefined;
-        req.feedbackReceiver.encry_password = undefined;
-
-        next();
-    })
-}
 exports.writeFeedback = (req,res)=>{
+    
     const feedback = new Feedback({
-        feedbacker: req.profile._id,
-        receiver: req.feedbackReceiver._id,
+        feedbacker: req.params.feedbacker,
+        receiver: req.params.feedbackReceiver,
         feedbackText: req.body.feedbackText,
         rating: req.body.rating
     })
@@ -256,7 +240,7 @@ exports.writeFeedback = (req,res)=>{
     feedback.save((err,feedback)=>{
         if(err){
             return res.status(400).json({
-                error: `${err}`,
+                error: `Unable to save`,
             })
         }
         User.findByIdAndUpdate(feedback.receiver, 
@@ -277,4 +261,37 @@ exports.writeFeedback = (req,res)=>{
             rating: feedback.rating
         })
     })
+}
+
+exports.updatePaymentInUser = (req,res) => {
+    User.findByIdAndUpdate(req.body.sender, 
+        {"$push" : { "payments": res.locals.invoice._id}},
+        {new: true, useFindAndModify: false },
+        (err, user)=>{
+            if(err){
+                return res.status(400).json({
+                    error: "Unable to update payment to sender"
+                })
+            }
+            res.locals.invoiceSender = user;
+            User.findByIdAndUpdate(req.body.receiver, 
+                {"$push" : { "payments": res.locals.invoice._id}},
+                {new: true, useFindAndModify: false },
+                (err, ruser)=>{
+                    if(err){
+                        return res.status(400).json({
+                            error: "Unable to update payment to receiver"
+                        })
+                    }
+                    res.locals.invoiceReceiver = ruser;
+                    console.log("Done with sender")
+                    return res.json({
+                        invoice: res.locals.invoice,
+                        ride: res.locals.ride
+                    })
+
+                }
+                )
+        }
+        )
 }

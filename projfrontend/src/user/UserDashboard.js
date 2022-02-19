@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { isAuthenticated } from '../authentication/helper'
+import Rate from '../Components/Rate'
 import Base from '../core/Base'
-import { getCityNames, getUserFeedbacks, getUserRides } from './helper/userapicalls'
+import { FaStar } from "react-icons/fa";
+import { getCityNames, getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
 
 
 const UserDashboard = () => {
 
     const [values, setValues] = useState({
-
+        feedbacks:[],
         rides: [],
+        payments: [],
         current: "feedbacks", //rides default
 
     })
-    const {current, rides} = values
+    const {current, rides, feedbacks, payments} = values
     const {user, token} = isAuthenticated()
 
     const handleClick = (name) => (event) =>{
@@ -25,40 +28,25 @@ const UserDashboard = () => {
         let feedbacks = [];
         let payments = [];
 
-
         getUserFeedbacks(user._id)
         .then(data => {
             if(data.feedbacks) feedbacks = data.feedbacks
-
-
-            setValues({...values, feedbacks: feedbacks})
-        })
-
-        getUserRides(user._id)
-        .then(data =>{
-            if(data.rides){
-            let tempRides = data.rides
-
-            tempRides.map((ride) => {
-                getCityNames(ride.sourceLocation,ride.destinationLocation)
+            getUserRides(user._id)
+            .then(data =>{
+                if(data.rides)
+                rides = data.rides
+                getUserPayments(user._id)
                 .then(data => {
-                    console.log(data.destinationName)
-                    rides.push({
-                        sourceLocation: data.sourceName,
-                        destinationLocation: data.destinationName,
-                         startTime: ride.startTime
-                    })
+                    if(data.payments) payments = data.payments
+
+                    setValues({...values, rides: rides, feedbacks: feedbacks, payments: payments})
                 })
-            })
-            setValues({...values, rides: rides})
-        }
+            }).catch(err => console.log("Unable to retrieve user data"))
 
-        }).catch(err => console.log("Unable to retrieve rides"))
-
-        //getuserpayments
+        })
     }
 
-
+    console.log(values)
     useEffect(() => {
         preload()
     }, [])
@@ -73,7 +61,38 @@ const UserDashboard = () => {
         if(current === "feedbacks"){
             return (
                 <div className="feedbacks">
-                    No feedbacks availabe
+                   {feedbacks != [] ? (<div className='data'>
+                    <table className="rides-table">
+                    <tbody>
+                        <tr>
+                        <th className='sourcetd'>Feedbacker</th>
+                        <th className='destinationtd' style={{'width': "20%"}}>Rating</th>
+                        <th  className='timetd'>Feedback</th>
+                        </tr>
+                    {feedbacks && feedbacks.map((feedback,key) => {
+                    return (
+                        <tr key={key}>
+                            <td>{feedback.feedbacker.name}</td>
+                            <td>
+                                {
+                                    [...Array(feedback.rating)].map((item, key) => {
+                                        return (
+                                            <FaStar
+                                            key={key}
+                                                color={"000"}
+                                            />
+                                        )
+                                    })
+                                }
+                                
+                                </td>
+                            <td>{feedback.feedbackText}</td>
+                        </tr>
+                    )
+                })}
+                    </tbody>
+                </table>
+                   </div>) : (<span>No Feedbacks</span>) }
                 </div>
             )
         }
@@ -95,15 +114,17 @@ const UserDashboard = () => {
             <div className="data">
                 <table className="rides-table">
                     <tbody>
-                        <td className='sourcetd'>Source</td>
-                        <td className='destinationtd'>Destination</td>
-                        <td  className='timetd'>Time</td>
+                        <tr>
+                        <th className='sourcetd'>Source</th>
+                        <th className='destinationtd'>Destination</th>
+                        <th  className='timetd'>Time</th>
+                        </tr>
                     {rides && rides.map((ride,key) => {
                     return (
                         <tr key={key}>
                             {console.log(ride)}
-                            <td>{ride.sourceLocation}</td>
-                            <td>{ride.destinationLocation}</td>
+                            <td>{ride.sourceLocation.name}</td>
+                            <td>{ride.destinationLocation.name}</td>
                             <td>{ride.startTime.split("T")[0]}</td>
                         </tr>
                     )
@@ -121,28 +142,28 @@ const UserDashboard = () => {
             <div className='admin-div user-div'>
                     <div className='profile-pic'>{
                         user.profile_pic && (
-                            <img src={`http://192.168.1.209:8800/image/${user.profile_pic}`} />
+                            <img src={`http://localhost:8800/image/${user.profile_pic}`} />
                         )
                     }{
                         (!user.profile_pic && (
-                            <img src={`http://192.168.1.209:8800/image/default_${user.gender.toLowerCase() }_pp.png`} />
+                            <img src={`http://localhost:8800/image/default_${user.gender.toLowerCase() }_pp.png`} />
                         ))}
-                    </div><br/>
+                    </div>
                     <div className='user-info'>
                    <div><span className='field'>Name: </span>{user.name}</div> 
                    <div><span className='field'>Email: </span>{user.email} </div>
                    <div><span className='field'>Username: </span>{user.username} </div>
                    <div><span className='field'>Gender: </span>{user.gender} </div>
                    <div><span className='field'>Documents: </span>{user.verificationStatus && (
-                       <span>Verified</span>
+                       <span style={{color:'green', fontWeight: 500}}>Verified</span>
                    )}
                    {(!user.verificationStatus) && (
-                       <span>Not verified</span>
+                       <span style={{color:'red', fontWeight: 500}}>Not verified</span>
                    )}
                    </div>
                   
                    </div>
-                   <div className='vehicle-btn'>
+                   <div className='vehicle-btn ud-third-section'>
                        <div>
                            <Link to={"../add-vehicle"}><button className='btn-submit dash-btn'>Add Vehicle</button></Link>
                            </div>
@@ -152,9 +173,15 @@ const UserDashboard = () => {
                        <div>
                            <Link to={"../get-rides"}><button className='btn-submit dash-btn'>Find Ride</button></Link>
                        </div>
+                       <div>
+                           <Link to={"../show-ride-requests"}><button className='btn-submit dash-btn'>Ride requests </button></Link>
+                       </div>
+                       <div>
+                           <Link to={"../check-request-status"}><button className='btn-submit dash-btn'>Check Ride status</button></Link>
+                       </div>
                    </div>
                 </div>
-                <hr />
+                
                 <div className="form-div-inner admin-form user-nav">
                     <br/>
                     <button className="btn-submit btn-admin btn-user" id='add-city' onClick={handleClick("rides")}>Rides</button> <br/><br/>

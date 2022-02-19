@@ -55,7 +55,7 @@ const Signup = () => {
         event.preventDefault();
 
         if(!(password === cfPassword)){
-            setValues({...values,error: "Password and Confirm Password should match"})
+            setValues({...values,error: "Password and Confirm Password must match"})
         }
 
         setValues({...values, error: "",loading: true});
@@ -186,6 +186,8 @@ const Signup = () => {
         <Base title='SignUp'>
             {errorMessage()}
             {signUpForm()}
+            <div style={{'height': "3rem"}}></div>
+          
             {performRedirect()}
         </Base>
     )

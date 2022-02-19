@@ -120,14 +120,14 @@ const UserVerification = () => {
                                     <td className='tddocument'>
                                         <button onClick={openModal} className='btn-modal btn-delete'>   
                                         Show Document                                    
-                                        {/* <img src={`http://192.168.1.209:8800/image/${user.document}`} alt='Image not available' /> */}</button> 
+                                        {/* <img src={`http://localhost:8800/image/${user.document}`} alt='Image not available' /> */}</button> 
                                         <Modal 
                                         isOpen = {modalIsOpen}
                                         onRequestClose={closeModal}
                                         contentLabel='Example'>
 {/*                                              <h2>Document of {user.name}</h2> shows document of one user only
  */}                                             <div>
-                                                <img  src={`http://192.168.1.209:8800/image/${user.document}`} alt='Image not available' />
+                                                <img  src={`http://localhost:8800/image/${user.document}`} alt='Image not available' />
                                              </div>
 
                                         </Modal>

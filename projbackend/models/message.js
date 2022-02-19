@@ -11,9 +11,9 @@ const messageSchema = mongoose.Schema({
         ref: "User"
     },
     content:{
-        type: String
-    },
-    time_created: Date
+        type: String,
+        trim: true
+    }
 },{timestamps:true})
 
 

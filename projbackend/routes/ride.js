@@ -13,20 +13,24 @@ const {
 
 const {
     getRideById,
+    getRide,
     createRide,
-    updateRide,
     getRidesByLocations,
     deleteRide,
     getAllRides,
-    requestRide
-} = require("../controllers/ride")
+    requestRide,
+    rejectRideRequest, 
+    approveRideRequest,
+    removePassengerFromRide
+} = require("../controllers/ride");
 
 // PARAMs
 router.param("userId", getUserById);
 router.param("rideId", getRideById);
 
 // GET
-router.get("/getAllRides", isSignedIn, isAuthenticated, getAllRides)
+router.get("/getAllRides", getAllRides)
+router.get("/ride/:rideId",  getRide);
 
 // POST
 router.post("/createRide/:userId", [
@@ -47,11 +51,11 @@ router.post("/createRide/:userId", [
     .withMessage("Please mention number of vacant seats"),
 
     check("fare")
-    .isLength({min:0})
+    .isLength({min:1})
     .withMessage("Please mention fare, Minimun fare should be 0"),
 
     check("startTime")
-    .isLength({min:0})
+    .isLength({min:1})
     .withMessage("Please mention time of the ride"),
 
 ], isSignedIn, isAuthenticated, createRide);
@@ -59,9 +63,12 @@ router.post("/ride/locationFilter", getRidesByLocations)
 
 
 // PUT
-router.put("/ride/:rideId", updateRide);
+/* router.put("/ride/:rideId", updateRide); */
 router.put("/request-ride/:rideId/:userId", isSignedIn,isAuthenticated, requestRide)
-router.put("/approve-passenger/:userId")
+router.put("/approve-passenger/:userId/:rideId/:acceptId", isSignedIn, isAuthenticated, approveRideRequest)
+router.put("/reject-passenger/:userId/:rideId/:rejectId", isSignedIn, isAuthenticated, rejectRideRequest)
+router.put("/removePassenger/:rideId/:passengerId", removePassengerFromRide)
+
 
 
 // DELETE

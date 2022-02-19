@@ -115,7 +115,7 @@ input{
     background-color: var(--color-teal);
     color: var(--color-neutral);
     border: none;
-    border-radius: 40px;
+    border-radius: 10px;
     padding: 1%;
     font-size: 1rem;
     box-shadow: 3px 5px 9px 0px rgba(0,0,0,0.75);
@@ -193,22 +193,38 @@ button:hover{
 }
 
 /* User Dashboard */
-.user-dash{
-    grid-template-columns: none ;
+ .user-dash{
+    grid-template-columns: 75% ;
 }
 .user-div{
     flex-direction: row;
+    width: 100%;
+    margin-bottom: 1%;
+    align-items: center;
+}
+
+
+.ud-third-section{
+    width: 20%;
+}
+.ud-third-section div{
+    padding: 2%;
+}
+.ud-third-section div button{
+    width: 100%;
 }
 .user-info{
     width: 40%;
     text-align: left;
     margin-left: 4%;
+
 }
 .profile-pic{
     margin-top: 0;
 }
 .rides-table{
     width: 100%;
+    padding-top: 0;
 }
 .sourcetd{
     width: 40%;
@@ -217,7 +233,6 @@ hr{
     margin: 2% 0 0 0;
     border-top: 5px solid var(--color-carbon);
     border-left: 0;  
-
 }
 .field{
     color: var(--color-teal);
@@ -225,11 +240,12 @@ hr{
 }
 .user-nav{
     margin-top: 0;
+    margin: 0;
     display: flex;
     background-color: #2b6777;
     padding: 0;
-    border-radius: 4%;
-    height: 40%;
+    height: 50%;
+    width: 100%;
 }
 .vehicle-btn{
     display: flex;
@@ -239,9 +255,11 @@ hr{
 }
 .dash-btn{
     padding: 4%;
+    box-shadow: none;
 }
 .btn-user{
-    padding: 1%;
+    padding: 0;
+    margin: 0;
     border-radius: 0;
     box-shadow: none;
 }
@@ -282,6 +300,42 @@ td, th{
     padding: 3%;
     
 }
+/* Ride - Card */
+.ride-card{
+    display: grid;
+    grid-template-columns: 20% 40% 20%;
+    justify-content: center;
+    text-align: center;
+    margin: 1%;
+
+}
+.ride{
+    border: 2px solid #2b6777;
+    padding: 2%;
+    border-radius: 10px;
+}
+.ride-btn{
+    margin: 1%;
+}
+
+/* Ride - Status*/
+.rideStatus{
+    width: 100%;
+}
+.ride-req-btn{
+    text-align: center;
+    padding: 1%;
+}
+.ride-req-btn button{
+    padding: 2%;
+    border-radius:8px ;
+}
+/* Payment */
+.payment-success{
+    color: var(--color-success);
+    font-weight: 800;
+ 
+}
 /* delete-city */
 .btn-delete{
     background-color: var(--color-error);
@@ -300,6 +354,21 @@ td, th{
 }
 .tddeletebtn{
     width: 10%;
+}
+.btn-noboxshadow{
+    box-shadow: none;
+    padding: 1%;
+    border-radius: 5px;
+}
+.ratingradio{
+    display: none;
+}
+.ratingcontainer{
+    display: inline-flex;
+    font-size: 100%;
+}
+.ratingDiv{
+    cursor: pointer;
 }
 .footer{
     position: fixed;

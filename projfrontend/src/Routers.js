@@ -3,14 +3,21 @@ import { BrowserRouter, Routes as Switch, Route } from "react-router-dom";
 import AddCity from './admin/AddCity';
 import DeleteCity from './admin/DeleteCity';
 import UserVerification from './admin/UserVerification';
+import Messenger from './chat/Messenger';
+import CheckPayments from './Ride/CheckPayments';
+import Payment from './Ride/Payment';
+import ShowRideRequests from './Ride/ShowRideRequests';
 import ShowRides from './Ride/ShowRides';
 import AddVehicle from './user/AddVehicle';
 import AdminDashboard from './user/AdminDashboard';
+import CheckRideStatus from './user/CheckRideStatus';
 import ChooseRole from './user/ChooseRole';
+import Feedback from './user/Feedback';
 import PostRide from './user/PostRide';
 import SignIn from './user/Signin';
 import Signup from './user/Signup';
 import UserDashboard from './user/UserDashboard';
+import ViewUserProfile from './user/ViewUserProfile';
 
 const Routers = () => {
 
@@ -32,6 +39,15 @@ const Routers = () => {
                 <Route path="/get-rides" exact element={<ShowRides/>} />
                 <Route path="/add-vehicle" exact element={<AddVehicle/>} />
                 <Route path="/user-dashboard" exact element={<UserDashboard/>} />
+                <Route path="/show-ride-requests" exact element={<ShowRideRequests/>} />
+                <Route name="view-profile" path="/view-profile/:viewId" exact element={<ViewUserProfile/>} />
+                <Route path="/check-request-status" exact element={<CheckRideStatus/>} />
+                <Route path="/checkpayments/:rideId" exact element={<CheckPayments/>} />
+                <Route path="/payment/:rideId" exact element={<Payment/>} />
+                <Route path="/feedback/:rideId" exact element={<Feedback/>} />
+
+                <Route path="/messenger" exact element={<Messenger/>} />
+
             </Switch>
         </BrowserRouter>
     )
