@@ -1,13 +1,25 @@
 import React, {useState, useEffect} from 'react'
+
 import { isAuthenticated } from '../authentication/helper';
+import Map from '../Components/Map';
 import Base from '../core/Base';
 import { createRide, getAllCities } from "../Ride/helper/rideapicalls";
 import { getUserVehicles } from './helper/userapicalls';
+
+
+
 const PostRide = () => {
+
+    const [latitude, setLatitude] = useState(19.05444);
+    const [longitude, setLongitude] = useState(72.84056)
+    const [locationName, setLocationName] = useState('Bandra, Mumbai')
+    
     const [values,setValues] = useState({
         sourceLocation: "",
         destinatonLocation: "",
         vehicles: [],
+        startLocation:"",
+        destLocation:"",
         vehicle:"",
         startTime: "",
         fare: "",
@@ -23,6 +35,8 @@ const PostRide = () => {
         destinationLocation,
         vehicles,
         vehicle,
+        startLocation,
+        destLocation,
         startTime,
         fare,
         seats,
@@ -31,25 +45,22 @@ const PostRide = () => {
         loading,
         cities
     } = values;
-
+    const  onLocationChange = (lat, lon, name) => {
+        setLatitude(lat)
+        setLongitude(lon)
+        setLocationName(name)
+        console.log(`${lat}, ${lon}`)
+    }
     const preload = () => {
-        let cities=[]
-        getAllCities().then(data => {
-            if(data.error){
-                setValues({...values, error: data.error})
-            }else{
-                cities = data.cities
-
-            }
-        })
-
-        
+        if(!user.verificationStatus){
+            return setValues({...values, error: "Documents need to be verified to post a ride"})
+        }
         getUserVehicles(user._id, token).then(data => {
             if(data.error) {
                 setValues({...values, error: "To post a ride, you must add a vehicle first"})
                
             }else{
-                    setValues({...values, vehicles: data.vehicles, cities: cities, vehicle: data.vehicles[0]._id, sourceLocation: cities[0]._id, destinationLocation: cities[0]._id})
+                    setValues({...values, vehicles: data.vehicles, vehicle: data.vehicles[0]._id})
             }
         })
 
@@ -59,10 +70,11 @@ const PostRide = () => {
       preload()
     }, [])
 
-
+    
     const onSubmit = (event) =>{
         event.preventDefault();
-        setValues({...values, loading: true})
+        setValues({...values, loading: true, error:""})
+        console.log(destinationLocation)
 
         createRide({ sourceLocation, destinationLocation, startTime, vehicle, fare, seats}, user._id, token).then(data => {
             if(data.error){
@@ -103,40 +115,45 @@ const PostRide = () => {
         }
     }
     const handleChange = (name) => (event)=>{
-        console.log(event.target.value)
         setValues({...values, error:false, [name]: event.target.value})
+    }
+
+    const setLocation = (name) => {
+        const obj = { latitude: latitude, longitude: longitude, name: locationName }
+        console.log(obj)
+        if(name == "source"){
+            setValues({...values, sourceLocation: obj, startLocation: locationName})
+        }else{
+            console.log('dest')
+            setValues({...values, destinationLocation: obj, destLocation: locationName})
+        }
     }
 
     const rideForm = ()=>{
         return (
-            <div className="form-div-outer">
-                 <div></div>
-                <div className="form-div-inner">
+            <div className="form-div-outer postride-outer">
+
+                <div className="form-div-inner postride-inner" >
                     <form>
+                        <b style={{'fontSize': "1rem"}}>Find location on map and click on set Location</b>
                         <div className="form-group">
                             <label htmlFor="sourceLocation">
-                                Source: 
-                                    <select id='sourceLocation' name='sourceLocation' onChange={handleChange("sourceLocation")}>
-                                        {cities && cities.map((city,key)=>{
-                                            return (
-                                                <option key={key} value={city._id}>{city.name}</option>
-                                            )
-                                        })}
-                                    </select>
+                                    Source: <input type='text' 
+                                    value={startLocation} 
+                                    disabled
+                                    onChange={handleChange("startLocation")}/> &nbsp;
+                                    <button className="btn-submit" onClick={(e) => { e.preventDefault()
+                                setLocation('source')}}>Set Location</button>
                             </label>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="destinationLocation">
-                                Destination: 
-                                    <select id='destinationLocation' name='destinationLocation' onChange={handleChange("destinationLocation")}>
-                                        {cities && cities.map((city,key)=>{
-                                            return (
-                                                <option key={key} value={city._id}>{city.name}</option>
-                                            )
-                                        })}
-                                    </select>
+                            <label htmlFor="sourceLocation">
+
+                                Destination: <input type='text' disabled value={destLocation} onChange={handleChange("destLocation")}/> &nbsp;<button className="btn-submit" onClick={(e) => { e.preventDefault()
+                                setLocation('dest')}}>Set Location</button>
                             </label>
                         </div>
+                        
                         <div className="form-group">
                             <label htmlFor="vehicle">
                                 Vehicle: 
@@ -176,7 +193,9 @@ const PostRide = () => {
                         <button className="btn-submit" onClick={onSubmit}>Post</button>
                     </form>
                 </div>
-                <div></div>
+                <Map latitude={latitude} longitude={longitude} onLocationChange={onLocationChange}/>
+               
+
             </div>
         )
     }

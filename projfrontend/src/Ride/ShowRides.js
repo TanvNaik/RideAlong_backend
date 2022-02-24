@@ -3,10 +3,12 @@ import { isAuthenticated } from '../authentication/helper';
 import Base from '../core/Base';
 import { getAllRides, requestRideCall } from './helper/rideapicalls';
 import RideCard from '../Components/RideCard';
+import ViewMap from '../Map/ViewMap';
+import { Link } from 'react-router-dom';
 
 
 const ShowRides = () => {
-
+    
     const [values, setValues] = useState({
         rides: [],
         error: "",
@@ -38,7 +40,7 @@ const ShowRides = () => {
                 let todayDate = today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate()
                 let todayTime = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
 
-
+                rides.push(ride)
                 if(
                 (!ride.passengers.includes(user._id)) &&
                 (!ride.requests.includes(user._id)) &&
@@ -50,12 +52,7 @@ const ShowRides = () => {
                     rides.push(ride)
                 }
             })
-            // const rideDate =
-            // const newDate = today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate()
-            // console.log(today.getFullYear() + '-' + ("0" +(today.getMonth()+1)).slice(-2) + '-' + today.getDate())
-            // console.log(rideDate < newDate)
-            // console.log(rides[0].startTime.split('T')[1].split('.')[0]) 
-            // console.log(today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds())
+            
             
             setValues({...values, loading:false, rides: rides})
         })
@@ -73,6 +70,7 @@ const ShowRides = () => {
         </div>
         )
     }
+    
     const requestRide = (e) => {
         const rideId = e.target.parentNode.id
 
@@ -100,16 +98,13 @@ const ShowRides = () => {
         console.log(newRides)
         setValues({...values, rides: newRides})
     }
-    const chatbtn = (e) => {
-        const rideId = e.target.parentNode.id
-    }
 
     const showRides = () => {
         return (
-            <div>
+            <div  className="ride-card">
                 {rides && rides.map((ride, key) => {
                     if( ride.seats > 0){
-                        return <RideCard ride={ride} key={key} requestRide = {requestRide} chat={chatbtn}/>
+                        return <RideCard ride={ride} key={key} requestRide = {requestRide}/>
                     }
                 })}
             </div>
@@ -120,7 +115,11 @@ const ShowRides = () => {
     return (
         <Base title="View rides">
             {errorMessage()}
+            <div className='ride-outer'>
             {showRides()}
+            {/* {srcLatitude && <ViewMap srcLatitude={srcLatitude} srcLongitude={srcLongitude} dstLatitude={dstLatitude} dstLongitude={dstLongitude} Change={didChange} />} */}
+            </div>
+           
         </Base>
     )
 }

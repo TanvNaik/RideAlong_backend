@@ -34,13 +34,6 @@ router.get("/ride/:rideId",  getRide);
 
 // POST
 router.post("/createRide/:userId", [
-    check("sourceLocation")
-    .isLength({min:1})
-    .withMessage("Source Location is required"),
-
-    check("destinationLocation")
-    .isLength({min:1})
-    .withMessage("Destination Location is required"),
 
     check("vehicle")
     .isLength({min:1})

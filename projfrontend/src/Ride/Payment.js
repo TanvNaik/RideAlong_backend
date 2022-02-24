@@ -36,12 +36,12 @@ const Payment = () => {
                     <div className="form-group">
                         <label htmlFor="from" className='field'>
                          Source:   
-                        </label> {ride.sourceLocation.name}
+                        </label> {ride.sourceLocation[0].name}
                     </div>
                     <div className="form-group">
                         <label htmlFor="from" className='field'>
                          Destination:   
-                        </label> {ride.destinationLocation.name}
+                        </label> {ride.destinationLocation[0].name}
                     </div>
                     <div className="form-group" >
                         <label htmlFor="from" className='field'>

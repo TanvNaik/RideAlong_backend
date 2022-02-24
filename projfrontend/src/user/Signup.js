@@ -9,6 +9,7 @@ const Signup = () => {
         name: "",
         username: "",
         password: "",
+        email: "",
         cfPassword: "",
         pp: "",
         document: "",

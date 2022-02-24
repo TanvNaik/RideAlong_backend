@@ -4,6 +4,7 @@ import AddCity from './admin/AddCity';
 import DeleteCity from './admin/DeleteCity';
 import UserVerification from './admin/UserVerification';
 import Messenger from './chat/Messenger';
+import ViewMap from './Map/ViewMap';
 import CheckPayments from './Ride/CheckPayments';
 import Payment from './Ride/Payment';
 import ShowRideRequests from './Ride/ShowRideRequests';
@@ -16,6 +17,7 @@ import Feedback from './user/Feedback';
 import PostRide from './user/PostRide';
 import SignIn from './user/Signin';
 import Signup from './user/Signup';
+import UpdateProfile from './user/UpdateProfile';
 import UserDashboard from './user/UserDashboard';
 import ViewUserProfile from './user/ViewUserProfile';
 
@@ -40,13 +42,15 @@ const Routers = () => {
                 <Route path="/add-vehicle" exact element={<AddVehicle/>} />
                 <Route path="/user-dashboard" exact element={<UserDashboard/>} />
                 <Route path="/show-ride-requests" exact element={<ShowRideRequests/>} />
-                <Route name="view-profile" path="/view-profile/:viewId" exact element={<ViewUserProfile/>} />
+                <Route path="/view-profile/:viewId" exact element={<ViewUserProfile/>} />
                 <Route path="/check-request-status" exact element={<CheckRideStatus/>} />
                 <Route path="/checkpayments/:rideId" exact element={<CheckPayments/>} />
                 <Route path="/payment/:rideId" exact element={<Payment/>} />
                 <Route path="/feedback/:rideId" exact element={<Feedback/>} />
-
+                <Route path="/viewmap/:rideId" exact element={<ViewMap/>} />
+                <Route path="/messenger/:userId" exact element={<Messenger/>} />
                 <Route path="/messenger" exact element={<Messenger/>} />
+                <Route path="/update-profile" exact element={<UpdateProfile/>} />
 
             </Switch>
         </BrowserRouter>

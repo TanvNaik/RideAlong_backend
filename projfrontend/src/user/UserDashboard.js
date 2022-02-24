@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { isAuthenticated } from '../authentication/helper'
-import Rate from '../Components/Rate'
 import Base from '../core/Base'
 import { FaStar } from "react-icons/fa";
-import { getCityNames, getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
+import {  getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
 
 
 const UserDashboard = () => {
@@ -17,7 +16,7 @@ const UserDashboard = () => {
 
     })
     const {current, rides, feedbacks, payments} = values
-    const {user, token} = isAuthenticated()
+    const {user} = isAuthenticated()
 
     const handleClick = (name) => (event) =>{
          setValues({...values, current: name})
@@ -46,7 +45,6 @@ const UserDashboard = () => {
         })
     }
 
-    console.log(values)
     useEffect(() => {
         preload()
     }, [])
@@ -65,7 +63,7 @@ const UserDashboard = () => {
                     <table className="rides-table">
                     <tbody>
                         <tr>
-                        <th className='sourcetd'>Feedbacker</th>
+                        <th className='sourcetd'>Feedback By</th>
                         <th className='destinationtd' style={{'width': "20%"}}>Rating</th>
                         <th  className='timetd'>Feedback</th>
                         </tr>
@@ -74,7 +72,10 @@ const UserDashboard = () => {
                         <tr key={key}>
                             <td>{feedback.feedbacker.name}</td>
                             <td>
-                                {
+                                { feedback.rating == 0 ? (<FaStar
+                                            key={key}
+                                                color={"000"}
+                                            />):
                                     [...Array(feedback.rating)].map((item, key) => {
                                         return (
                                             <FaStar
@@ -101,8 +102,27 @@ const UserDashboard = () => {
         if(current === "payments"){
             return (
                 <div className="payments">
-                    No payments availabe
-                </div>
+                {payments != [] ? (<div className='data'>
+                    <table className="rides-table">
+                    <tbody>
+                        <tr>
+                        <th className='sourcetd'>Date</th>
+                        <th className='destinationtd' style={{'width': "20%"}}>Amount</th>
+                        <th  className='timetd'>Paid to</th>
+                        </tr>
+                    {payments && payments.map((payment,key) => {
+                    return (
+                        <tr key={key}>
+                            <td>{payment.createdAt.split("T")[0]}</td>
+                            <td> &#8377; {payment.invoiceAmount}</td>
+                            <td>{payment.receiver.name}</td>
+                        </tr>
+                    )
+                })}
+                    </tbody>
+                </table>
+                   </div>) : (<span>No Feedbacks</span>) }
+            </div>
             )
         }
     }
@@ -123,8 +143,8 @@ const UserDashboard = () => {
                     return (
                         <tr key={key}>
                             {console.log(ride)}
-                            <td>{ride.sourceLocation.name}</td>
-                            <td>{ride.destinationLocation.name}</td>
+                            <td>{ride.sourceLocation[0].name}</td>
+                            <td>{ride.destinationLocation[0].name}</td>
                             <td>{ride.startTime.split("T")[0]}</td>
                         </tr>
                     )
@@ -161,6 +181,10 @@ const UserDashboard = () => {
                        <span style={{color:'red', fontWeight: 500}}>Not verified</span>
                    )}
                    </div>
+                   {/* <div>
+                           <Link to={"../update-profile"} ><button className='btn-submit dash-btn' style={{'width' : '70%','padding': '1%'}}>Update Profile</button></Link>
+                        </div> */}
+                      
                   
                    </div>
                    <div className='vehicle-btn ud-third-section'>
@@ -184,9 +208,13 @@ const UserDashboard = () => {
                 
                 <div className="form-div-inner admin-form user-nav">
                     <br/>
-                    <button className="btn-submit btn-admin btn-user" id='add-city' onClick={handleClick("rides")}>Rides</button> <br/><br/>
-                    <button className="btn-submit btn-admin btn-user" id='delete-city' onClick={handleClick("feedbacks")}>Feedbacks</button> <br/><br/>
-                    <button className="btn-submit btn-admin btn-user" id='user-verification' onClick={handleClick("payments")}>Payments</button> 
+
+                    <button  className={current == "rides" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"} id='add-city' onClick={handleClick("rides")}>Rides</button> <br/><br/>
+
+                    <button className={current == "feedbacks" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"} id='delete-city' onClick={handleClick("feedbacks")}>Feedbacks</button> <br/><br/>
+
+                    <button className={current == "payments" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"}id='user-verification' onClick={handleClick("payments")}>Payments</button> 
+
                     <br />
                 </div>
                 <div className="display-data">

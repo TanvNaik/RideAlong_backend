@@ -14,8 +14,6 @@ exports.signup = (req,res) => {
             error: errors.array()[0].msg
         })//422- Unprocessable entity
     }
-
-
     const user = new User(req.body);
     user.document = req.files.document[0].filename;
     user.profile_pic = req.files.pp[0].filename;

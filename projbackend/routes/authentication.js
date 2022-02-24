@@ -42,25 +42,31 @@ router.post("/signup", upload.fields([{
   }]), [
     check("name")
     .isLength({min: 3})
-    .withMessage("Name should be atleast 3 characters"),
-
-    check("gender")
-    .isLength({min: 1})
-    .withMessage("Gender is Required"),
+    .withMessage("Name should be atleast 3 characters")
+    .isAlpha()
+    .withMessage("Name should not contain any numbers"),
+    
 
     check("username")
     .isAlphanumeric()
+    .withMessage("Username must be alphanumeric and  atleast 6 characters")
     .isLength({min:6})
     .withMessage("Username must be alphanumeric and  atleast 6 characters"),
 
     check("email")
     .isEmail()
-    .withMessage("Enter valid email-id"),
+    .withMessage("Enter valid email-id"),  
 
     check("password")
     .isLength({min: 8})
+    .withMessage("Password must be minimum 8 characters and alphanumeric")
     .isAlphanumeric()
     .withMessage("Password must be minimum 8 characters and alphanumeric"),
+
+    check("gender")
+    .isLength({min: 1})
+    .withMessage("Gender is Required"),
+    
 
     check("contact_number")
     .isLength({min: 10, max: 10})

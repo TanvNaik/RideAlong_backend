@@ -1,23 +1,23 @@
 import React , {useState, useEffect}from 'react'
-import { Link, Navigate, useLocation, useParams} from 'react-router-dom'
+import {  Navigate,  useParams} from 'react-router-dom'
+import { FaStar } from "react-icons/fa";
 import { isAuthenticated } from '../authentication/helper'
 import Base from '../core/Base'
-import {  getUser, getUserFeedbacks, getUserRides } from './helper/userapicalls'
+import {  getUser, getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
 
 const ViewUserProfile = (props ) => {
     const [values, setValues] = useState({
+        feedbacks:[],
         rides: [],
-        current: "rides", //rides default
-        error:"",
-        feedbacks: "",
+        payments: [],
+        current: "feedbacks",
         findUser: ""
 
     })
-    const {current, rides, error,findUser} = values
+    const {current, rides, findUser, feedbacks, payments} = values
     const {user, token} = isAuthenticated()
-    const viewId = useParams().viewId/*  useLocation().pathname.split("/")[3] */
+    const viewId = useParams().viewId
 
-   /*  var findUser */
     const handleClick = (name) => (event) =>{
          setValues({...values, current: name})
     } 
@@ -36,30 +36,27 @@ const ViewUserProfile = (props ) => {
     }
 
     const preload = () => {
+        setUser()
         let rides = [];
         let feedbacks = [];
         let payments = [];
-
-        getUserFeedbacks (viewId)
+        getUserFeedbacks(viewId)
         .then(data => {
             if(data.feedbacks) feedbacks = data.feedbacks
-            let allvalues = values
-                allvalues.feedbacks = data.feedbacks
-                setValues({...allvalues})
+            getUserRides(viewId)
+            .then(data =>{
+                if(data.rides)
+                rides = data.rides
+                getUserPayments(viewId)
+                .then(data => {
+                    if(data.payments) payments = data.payments
 
- /*            setValues({...values, feedbacks: feedbacks}) */
+                    setValues({...values, rides: rides, feedbacks: feedbacks, payments: payments})
+                })
+            }).catch(err => console.log("Unable to retrieve user data"))
+
         })
-
-        getUserRides(viewId)
-        .then(data =>{
-            let allvalues = values
-                allvalues.rides = data.rides
-                setValues({...allvalues})
-        /*     setValues({...values, rides: data.rides}) */
-        }).catch(err => console.log("Unable to retrieve rides"))
-
-        //getuserpayments
-        setUser()
+        
     }
 
 
@@ -77,7 +74,38 @@ const ViewUserProfile = (props ) => {
         if(current === "feedbacks"){
             return (
                 <div className="feedbacks">
-                    No feedbacks availabe
+                   {feedbacks != [] ? (<div className='data'>
+                    <table className="rides-table">
+                    <tbody>
+                        <tr>
+                        <th className='sourcetd'>Feedback By</th>
+                        <th className='destinationtd' style={{'width': "20%"}}>Rating</th>
+                        <th  className='timetd'>Feedback</th>
+                        </tr>
+                    {feedbacks && feedbacks.map((feedback,key) => {
+                    return (
+                        <tr key={key}>
+                            <td>{feedback.feedbacker.name}</td>
+                            <td>
+                                {
+                                    [...Array(feedback.rating)].map((item, key) => {
+                                        return (
+                                            <FaStar
+                                            key={key}
+                                                color={"000"}
+                                            />
+                                        )
+                                    })
+                                }
+                                
+                                </td>
+                            <td>{feedback.feedbackText}</td>
+                        </tr>
+                    )
+                })}
+                    </tbody>
+                </table>
+                   </div>) : (<span>No Feedbacks</span>) }
                 </div>
             )
         }
@@ -86,11 +114,31 @@ const ViewUserProfile = (props ) => {
         if(current === "payments"){
             return (
                 <div className="payments">
-                    No payments availabe
-                </div>
+                {payments != [] ? (<div className='data'>
+                    <table className="rides-table">
+                    <tbody>
+                        <tr>
+                        <th className='sourcetd'>Date</th>
+                        <th className='destinationtd' style={{'width': "20%"}}>Amount</th>
+                        <th  className='timetd'>Paid to</th>
+                        </tr>
+                    {payments && payments.map((payment,key) => {
+                    return (
+                        <tr key={key}>
+                            <td>{payment.createdAt.split("T")[0]}</td>
+                            <td> &#8377; {payment.invoiceAmount}</td>
+                            <td>{payment.receiver.name}</td>
+                        </tr>
+                    )
+                })}
+                    </tbody>
+                </table>
+                   </div>) : (<span>No Feedbacks</span>) }
+            </div>
             )
         }
     }
+
 
     const loadRides = () =>{
         if(current === "rides"){
@@ -108,8 +156,8 @@ const ViewUserProfile = (props ) => {
                     return (
                         <tr key={key}>
                             {console.log(ride)}
-                            <td>{ride.sourceLocation.name}</td>
-                            <td>{ride.destinationLocation.name}</td>
+                            <td>{ride.sourceLocation[0].name}</td>
+                            <td>{ride.destinationLocation[0].name}</td>
                             <td>{ride.startTime.split("T")[0]}</td>
                         </tr>
                     )
@@ -119,6 +167,7 @@ const ViewUserProfile = (props ) => {
             </div>
         )}
     }
+
 
 
     return (
@@ -154,10 +203,14 @@ const ViewUserProfile = (props ) => {
                 <hr />
                 <div className="form-div-inner admin-form user-nav">
                     <br/>
-                    <button className="btn-submit btn-admin btn-user" id='add-city' onClick={handleClick("rides")}>Rides</button> <br/><br/>
-                    <button className="btn-submit btn-admin btn-user" id='delete-city' onClick={handleClick("feedbacks")}>Feedbacks</button> <br/><br/>
-                    <button className="btn-submit btn-admin btn-user" id='user-verification' onClick={handleClick("payments")}>Payments</button> 
+
+                    <button className={current == "rides" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"} id='add-city' onClick={handleClick("rides")}>Rides</button> <br/><br/>
+
+                    <button className={current == "rides" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"} id='delete-city' onClick={handleClick("feedbacks")}>Feedbacks</button> <br/><br/>
+
+                    <button className={current == "rides" ? "btn-submit btn-admin btn-user active" : "btn-submit btn-admin btn-user"} id='user-verification' onClick={handleClick("payments")}>Payments</button> 
                     <br />
+
                 </div>
                 <div className="display-data">
                 {loadRides()}

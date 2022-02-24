@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const Ride = require("../models/ride")
 const User = require("../models/user")
 
-
 exports.getRideById = (req,res, next, id)=>{
     Ride.findById(id)
     .populate('sourceLocation driverUser destinationLocation requests passengers payments')
@@ -29,7 +28,7 @@ exports.getAllRides= (req,res) =>{
 
     Ride.find()
     .sort([[sortBy, 'descending']])
-    .populate('sourceLocation destinationLocation driverUser')
+    .populate('driverUser')
     .limit(limit)
     .exec((err, rides) => {
         if(err){
@@ -88,13 +87,12 @@ exports.createRide = (req,res)=>{
             error: errors.array()[0].msg
         })//422- Unprocessable entity
     }
-
-
     if(req.profile.verificationStatus !== true){
         return res.status(400).json({
             error: "Documents needs to be verified by admin before posting a ride"
         })
     }
+
     const ride = new Ride(req.body);
     ride.driverUser = req.profile._id
     

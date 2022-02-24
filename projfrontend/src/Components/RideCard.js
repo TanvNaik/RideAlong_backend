@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { isAuthenticated } from '../authentication/helper';
 
 const RideCard = (props) => {
+    const {user} = isAuthenticated()
     const td = new Date(props.ride.startTime)
     const thours = td.getHours()
     const tmins = td.getMinutes()
-    function convert(str) {
-        var date = new Date(str),
-          mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-          day = ("0" + date.getTime());
-        return [date.getFullYear(), mnth, day].join("-");
-      }
+
+
     return (
-        <div className="ride-card" >
-            <div></div>
             <div className="ride" id={props.ride._id}>
                 <div className="ride-driver"> <span className='field'>Driver: </span>{props.ride.driverUser.name}</div>
 
                 <div className="ride-locations">
-                    <span className="source"><span className="field">From: </span >{props.ride.sourceLocation.name} </span> &nbsp; &nbsp;
-                    <span className="destination">  <span className='field'>To: </span>{props.ride.destinationLocation.name} </span>
+                    <span className="source"><span className="field">From: </span >{props.ride.sourceLocation[0].name} </span> <br></br>
+                    <span className="destination">  <span className='field'>To: </span>{props.ride.destinationLocation[0].name} </span>
                 </div>
 
                 <div className="ride-seats">
@@ -39,21 +36,21 @@ const RideCard = (props) => {
                 
                 {(!props.isList) &&  (
                     <>
-                    {(props.ride.requestSent) && 
+                    {(props.ride.requestSent || props.ride.requests.includes(user._id)) ?
                         <button className="btn-submit ride-btn request-sent-btn " disabled>Sent</button>
-                    }
-                    {(!props.ride.requestSent) && 
+                    : 
                     <button className=" btn-submit ride-btn request-ride" onClick={props.requestRide}>Request</button>
                     }
-                    <button className="btn-submit ride-btn" onClick={props.chat}>Chat</button>
+                     <Link to={`../messenger/${props.ride.driverUser._id}`}><button className="btn-submit ride-btn" >Chat</button></Link>
                     </>
                 )}
-                
+                {/* srcLatitude, srcLongitude, dstLatitude, dstLongitude */}
+                <Link to={`../viewmap/${props.ride._id}`} ><button className="btn-submit ride-btn ">View Map</button></Link>
                 
                 
             </div>
-            <div></div>
-        </div>
+            
+      
     )
 }
 

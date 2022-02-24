@@ -10,16 +10,16 @@ const rideSchema = mongoose.Schema({
         type: [mongoose.Schema.ObjectId], 
         ref: 'User', 
     },
-    sourceLocation:{
-        type: ObjectId,
-        ref: "City",
-        required: true
-    },
-    destinationLocation:{
-        type: ObjectId,
-        ref: "City",
-        required: true
-    },
+    sourceLocation:[{
+        name: String,
+        latitude: String,
+        longitude: String
+    }],
+    destinationLocation:[{
+        name: String,
+        latitude: String,
+        longitude: String
+    }],
     requests: {
         type: [mongoose.Schema.ObjectId], 
         ref: 'User', 

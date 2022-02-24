@@ -66,7 +66,7 @@ const Nav = ({history}) => {
             :
             (
                 <>
-                <li><Link to={"./signup"}>Sign Up</Link></li>
+                <li><Link to={"../signup"}>Sign Up</Link></li>
                 <li><Link to={"../"}>Login</Link></li>
                 </>
 

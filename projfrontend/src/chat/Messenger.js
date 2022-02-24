@@ -4,13 +4,17 @@ import Base from '../core/Base'
 import Conversation from './conversations/Conversation'
 import Message from './message/message'
 import { isAuthenticated } from '../authentication/helper'
-import { createMessage, getMessages, getUserConversations } from './helper/chatapicalls'
-import {io} from "socket.io-client"
+import { createConversation, createMessage, getMessages, getUserConversations } from './helper/chatapicalls'
+/* import {io} from "socket.io-client" */
+import { useParams } from 'react-router-dom'
+import { getUser } from '../user/helper/userapicalls'
 const Messenger = () => {
 
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState(null)
     const [messages, setMessages] = useState([])
+    const [newConv, setNewConv] = useState([])
+    const [newUser, setNewUser] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState("")
     const [error, setError] = useState("")
     const {user, token} = isAuthenticated()
@@ -18,25 +22,35 @@ const Messenger = () => {
     /* const [socket, setSocket] = useState(null) */
     const socket = useRef()
     const scrollRef = useRef()
-
-
+    const userId = useParams().userId
+    
     useEffect(() => {
-        socket.current = io("ws://localhost:8900")
+        /* socket.current = io("ws://localhost:8900") */
 
-        // receiving message
+        if(userId){
+            getUser(userId, token, user._id)
+            .then(data => {
+                setNewUser(data.user)
+            setCurrentChat({
+                members: [user, data.user]
+            })
+        })
+        }else{
+            setCurrentChat(null)
+            setNewUser(false)
+        }
+    
+        /* // receiving message
         socket.current.on('getMessage', (data) => {
-            console.log(data.sender)
             setArrivalMessage({
                 sender: data.sender,
                 content: data.text,
                 createdAt: Date.now(),
                 })
-        })
+        }) */
     },[])
     
-    useEffect(()=>{
-        console.log("inside arricva;message")
-        console.log(arrivalMessage.sender)
+    /* useEffect(()=>{
         if(arrivalMessage){
             if( currentChat){
                 if (currentChat.members[0]._id === arrivalMessage.sender._id || currentChat.members[0]._id === arrivalMessage.sender._id ){
@@ -45,13 +59,13 @@ const Messenger = () => {
             }
         }
     },[arrivalMessage, currentChat])
-
-    useEffect(()=>{
+ */
+    /* useEffect(()=>{
         socket.current.emit('addUser', user._id)
         socket.current.on('getUsers', users => {
             //
         })
-    },[user])
+    },[user]) */
 
 
     useEffect(() => {
@@ -63,14 +77,22 @@ const Messenger = () => {
 
     const loadChat = () => {
         if(currentChat){
-            getMessages(currentChat._id)
+            console.log(currentChat)
+            if(currentChat._id){
+                getMessages(currentChat._id)
             .then(data => {
                 if(data.error){
                     setError(data.error)
                 }else{
+                    console.log(data.message)
                     setMessages(data.message)
                 }
             })}
+            else{
+                setNewConv(true)
+            }
+            }
+        
     }
     useEffect(() => {
         loadChat()
@@ -95,23 +117,53 @@ const Messenger = () => {
             content: message
         }
         const receiverId = (currentChat.members[0]._id === user._id) ? currentChat.members[1]._id : currentChat.members[0]._id
-        socket.current.emit('sendMessage', {
+     /*    socket.current.emit('sendMessage', {
             sender: user,
             receiverId,
             text: message
-        })
+        }) */
         createMessage(mess).then(data => {
             if(data.error) {
                 setError("Unable to send message")
             }else{
                 setMessages([...messages, data.message])
                 setMessage("")
-                loadChat()
             }
         }).catch(err => console.log(err))
     }
 
-
+    const sendNewMessage = () => {
+        //create conversation
+        const convo = {
+            sender:user._id,
+            receiver: newUser._id
+        }
+        createConversation(convo).then(
+            data => {
+                if(data.error){
+                    setError(data.error)
+                }else{
+                    //createmessage 
+                    const conversation = data.conversation
+                    const mess = {
+                        conversationId: data.conversation._id,
+                        sender: user._id,
+                        content: message
+                    }
+                    createMessage(mess).then(data => {
+                        if(data.error) {
+                            setError("Unable to send message")
+                        }else{
+                            //setnewConv to false and set currentchat(conversationId)
+                            setNewConv(false)
+                            setCurrentChat(conversation)
+                            setMessage("")
+                        }
+                    }).catch(err => console.log(err))
+                }
+            }
+        )
+    }
     const messenger = () => {
         return (
             <div className="messenger">
@@ -145,7 +197,11 @@ const Messenger = () => {
                                     </div>
                                
                                <div style={{'height': '3rem' }}></div>
-                                {
+                                { newConv== true ? (
+                                <div className="chatBoxTop" >
+                                                <div ref={scrollRef}>
+                                                <Message message="Start Conversation" own="new" /></div>
+                                            </div>) : (
                                     messages && messages.map((message, key) => {
                                         return (
                                             <div className="chatBoxTop" key={key}>
@@ -158,6 +214,7 @@ const Messenger = () => {
                                             </div>
                                         )
                                     })
+                                    )
                                 }
                           </div>
                                 
@@ -166,7 +223,8 @@ const Messenger = () => {
                                         <br />
                                         <textarea name="message" placeholder={message} onChange={handleChange()}></textarea>
                                     </div>
-                                    <button className='chatSubmitButton' onClick={sendMessage}>Send</button>
+                                    {newConv ? (<button className='chatSubmitButton' onClick={sendNewMessage}>Send</button>): (<button className='chatSubmitButton' onClick={sendMessage}>Send</button>)}
+                                    
                                 </div>
                             </>
                             :

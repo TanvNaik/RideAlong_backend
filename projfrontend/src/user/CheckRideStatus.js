@@ -92,7 +92,7 @@ const CheckRideStatus = () => {
                         {pendingRides && pendingRides.map((ride,key) => {
                             return (<tr key={key} id={ride.ride._id}>
                               
-                                <td className='tdname'>{ride.ride.sourceLocation.name} to {ride.ride.destinationLocation.name}</td>
+                                <td className='tdname'>{ride.ride.sourceLocation[0].name} to {ride.ride.destinationLocation[0].name}</td>
 
                                 {/* Checks if the ride is owned by the current user */}
                                 <td>{ride.driver == true ? (<BsFillCheckSquareFill/>): (<BsFillXSquareFill/>)}</td>

@@ -86,6 +86,7 @@ align-items: center;
     display: grid;
     grid-template-columns: 30% 40% 30%;
     text-align: center;
+
     justify-content: center;
 }
 .form-div-inner{
@@ -147,7 +148,7 @@ input{
     -moz-box-shadow: 0 8px 6px -6px black;
          box-shadow: 0 8px 6px -6px black;
 }
-button:hover{
+button:hover,.active{
     background-color: var(--color-carbon);
     color: var(--color-teal);
     font-weight: 600;
@@ -301,17 +302,22 @@ td, th{
     
 }
 /* Ride - Card */
-.ride-card{
-    display: grid;
-    grid-template-columns: 20% 40% 20%;
+.ride-outer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
     justify-content: center;
-    text-align: center;
-    margin: 1%;
-
+    align-items: flex-start;
+}
+.ride-card{
+    width: 50%;
+    margin: 0;
+    padding: 0;
 }
 .ride{
     border: 2px solid #2b6777;
     padding: 2%;
+    margin: 1%;
     border-radius: 10px;
 }
 .ride-btn{
@@ -370,6 +376,35 @@ td, th{
 .ratingDiv{
     cursor: pointer;
 }
+/* postRide */
+.postride-outer{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.postride-inner{
+    margin-top: 0;
+    width: 60% ;
+    border: none;
+
+}
+/* MAP */
+.map{
+    height: 50vh;
+    width: 70%;
+    padding: 1%;
+    margin: 3%;
+    border: 3px solid var(--color-carbon);
+}
+#geocoder-container > div {
+    min-width: 50%;
+    margin-left: 25%;
+    }
+
 .footer{
     position: fixed;
     bottom: 0;

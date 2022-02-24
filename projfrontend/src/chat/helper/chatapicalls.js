@@ -11,7 +11,7 @@ export const getUserConversations = (userId, token) => {
     .catch(err => console.log(err))
 }
 
-export const createConversation = (members, token) => {
+export const createConversation = (members) => {
     return fetch(`/api/createConversation`, {
         method: "POST",
         headers: {

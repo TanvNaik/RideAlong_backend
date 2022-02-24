@@ -50,3 +50,10 @@
       background-color: #c0bfbf;
       color: black;
   }
+  .message-new{
+      width: 100%;
+      text-align: center;
+  }
+  .message-new b{
+    text-align: center;
+  }

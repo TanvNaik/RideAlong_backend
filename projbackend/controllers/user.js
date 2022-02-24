@@ -27,15 +27,15 @@ exports.getUser = (req,res)=>{
                 error: "No user was found in DB"
             });
         }
-        req.driverUser = user;
+        req.user = user;
           //hiding secured info
-    req.driverUser.salt = undefined;
-    req.driverUser.encry_password = undefined;
-    req.driverUser.createdAt = undefined;
-    req.driverUser.updatedAt = undefined;
+    req.user.salt = undefined;
+    req.user.encry_password = undefined;
+    req.user.createdAt = undefined;
+    req.user.updatedAt = undefined;
     
     return res.json({
-        user: req.driverUser
+        user: req.user
     });  
     })
 
@@ -175,7 +175,7 @@ exports.getUserPayments = (req,res)=>{
         "_id": {
             $in: req.profile.payments
         }
-    }, (error,payments)=>{
+    }).populate("receiver").exec((error,payments)=>{
         if(error){
             return res.status(400).json({
                 error: "Cannot find Payments"
@@ -188,15 +188,6 @@ exports.getUserPayments = (req,res)=>{
 }
 exports.showPendingVerifications = (req,res) =>{
 
-/*     User.find({documentsVerificationStatus: false},
-    (error, users) => {
-        if(error){
-            return res.status(400).json({
-                error: "Unable to load users"
-            })
-        }
-        return res.json(users)
-    }) */
     User.find({documentsVerificationStatus: false}).exec((err, users) => {
         if (err) {
           return res.status(400).json({
