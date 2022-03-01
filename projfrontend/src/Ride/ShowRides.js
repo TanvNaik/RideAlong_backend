@@ -113,7 +113,7 @@ const ShowRides = () => {
    
 
     return (
-        <Base title="View rides">
+        <Base title="Find a ride">
             {errorMessage()}
             <div className='ride-outer'>
             {showRides()}

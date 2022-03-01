@@ -34,6 +34,7 @@ margin-left:2%;
 font-size: 2.2rem;
  width: 20%;
  text-align: center;
+ vertical-align: middle;
 }
 .logo{
     margin: 4% 2% 0 0;
@@ -104,13 +105,17 @@ align-items: center;
 .btn-newaccount{
     font-size: 0.8rem;
 }
-input{
+input, textarea{
+    font-family: 'Poppins', sans-serif;
     border: 2px solid var(--color-teal);
     border-radius: 10px;
    -webkit-box-shadow: 0 8px 6px -6px var(--color-teal);
     -moz-box-shadow: 0 8px 6px -6px var(--color-teal);
     box-shadow: 0 8px 6px -6px var(--color-teal);
     padding: 0.8%;
+}
+textarea{
+    font-size: 1rem;
 }
 .btn-submit{
     background-color: var(--color-teal);

@@ -19,11 +19,11 @@ const Nav = ({history}) => {
         <div className='nav'>
             <h1 className="rideAlong">
                 <img src='https://p.kindpng.com/picc/s/352-3525571_cars-logo-for-website-hd-png-download.png' className='logo'/> 
-                RideAlong
+                <Link to={"../"}><span style={{'height':'100%'}}>RideAlong</span></Link>
             </h1>
             <ul className='navList'>
                 {/* <li><a href="#footer">About</a></li> */}
-                <li><a href="#">Contact Us</a></li>
+                <li><Link to={"../contact"}>Contact Us</Link></li>
                 {isAuthenticated() && isAuthenticated().user.role === 0 && (
         <li className='nav-item'>
           <Link

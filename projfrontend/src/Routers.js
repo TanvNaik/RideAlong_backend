@@ -4,6 +4,7 @@ import AddCity from './admin/AddCity';
 import DeleteCity from './admin/DeleteCity';
 import UserVerification from './admin/UserVerification';
 import Messenger from './chat/Messenger';
+import ContactUs from './core/ContactUs';
 import ViewMap from './Map/ViewMap';
 import CheckPayments from './Ride/CheckPayments';
 import Payment from './Ride/Payment';
@@ -51,6 +52,7 @@ const Routers = () => {
                 <Route path="/messenger/:userId" exact element={<Messenger/>} />
                 <Route path="/messenger" exact element={<Messenger/>} />
                 <Route path="/update-profile" exact element={<UpdateProfile/>} />
+                <Route path="/contact" exact element={<ContactUs/>} />
 
             </Switch>
         </BrowserRouter>

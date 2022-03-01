@@ -159,7 +159,7 @@ const AddVehicle = () => {
 
 
     return (
-        <Base title="Add Vehicle">
+        <Base title="Register Vehicle">
             {successMessage()}
             {errorMessage()}
             {loadingMessage()}

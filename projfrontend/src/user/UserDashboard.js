@@ -189,7 +189,7 @@ const UserDashboard = () => {
                    </div>
                    <div className='vehicle-btn ud-third-section'>
                        <div>
-                           <Link to={"../add-vehicle"}><button className='btn-submit dash-btn'>Add Vehicle</button></Link>
+                           <Link to={"../add-vehicle"}><button className='btn-submit dash-btn'>Register Vehicle</button></Link>
                            </div>
                        <div>
                            <Link to={"../post-ride"}><button className='btn-submit dash-btn'>Post Ride</button></Link>

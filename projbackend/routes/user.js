@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router();
 const multer = require("multer");
 const path = require("path")
+
+const nodemailer = require('nodemailer')
 const {check, validationResult} = require("express-validator")
 
 const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentication")
@@ -66,5 +68,56 @@ router.post("/addVehicle/user/:userId",upload.fields([{
 router.get("/pendingUserVerifications/:userId", isSignedIn, isAuthenticated, isAdmin, showPendingVerifications)
 router.put("/verify-user/:userId", isSignedIn, isAuthenticated, isAdmin, verifyUser);
 
+
+
+const transport = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use TLS
+    auth: {
+        user: process.env.SMTP_TO_EMAIL,
+        pass: process.env.SMTP_TO_PASSWORD,
+    },
+    }
+
+const transporter = nodemailer.createTransport(transport)
+
+transporter.verify((error, success) => {
+    if (error) {
+        //if error happened code ends here
+        console.error(error)
+    } else {
+        //this means success
+        console.log('Ready to send mail!')
+    }
+})
+
+
+router.post('/send-mail', (req, res) => {
+        //make mailable object
+        const mail = {
+        from: process.env.SMTP_FROM_EMAIL,
+        to: process.env.SMTP_TO_EMAIL,
+        subject: 'New Contact Form Submission',
+        text: `
+          from:
+          ${req.body.email}
+    
+          message:
+          ${req.body.message}`,
+        }
+        transporter.sendMail(mail, (err, data) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Failed to send mail',
+                })
+            } else {
+                return res.json({
+                    status: 'success',
+                })
+            }
+        })
+    })
+    
 
 module.exports = router;
