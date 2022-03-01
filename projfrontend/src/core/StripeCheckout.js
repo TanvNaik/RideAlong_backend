@@ -62,7 +62,7 @@ const StripeCheckout = ({ride, fare}) =>  {
     const showStripeButton = () => {
         return (
             <StripeCheckoutButton
-                stripeKey='pk_test_51K8cO1SJbisPWPLvnO6oX5JxlxrRCbrOegbR5NpJGOYaIjlq6yAfuZOCN4SjuGNlsXduEW2Okua1aqfqsC0KD2s400IEbTgsvR'
+                stripeKey= {process.env.REACT_APP_STRIPE_KEY}
                 token={makePayment}
                 amount= {fare * 100}
                 name='Pay for Ride'
