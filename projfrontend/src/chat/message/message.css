@@ -1,0 +1,59 @@
+:root{
+    --color-sky: #CAEBF2;
+    --color-carbon: #A9A9A9;
+    --color-error: #FF3B3F;
+    --color-neutral: #EFEFEF;
+    --color-success: #3eb23c;
+    --color-teal: #2b6777;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .messageTop{
+      display: flex;
+      flex-direction: row;
+  }
+  
+  .messageImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  .messageTopown{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .messageText{
+      padding: 10px;
+      border-radius: 20px;
+      background-color: var(--color-teal);
+      color: white;
+      max-width: 300px;
+  }
+  
+  .messageBottom{
+      font-size: 12px;
+      margin-top: 10px;
+  }
+  
+  .message.own{
+      align-items: flex-end;
+  }
+  
+  .message.own .messageText{
+      background-color: #c0bfbf;
+      color: black;
+  }
+  .message-new{
+      width: 100%;
+      text-align: center;
+  }
+  .message-new b{
+    text-align: center;
+  }

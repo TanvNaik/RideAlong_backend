@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+:root{
+    --color-sky: #CAEBF2;
+    --color-carbon: #A9A9A9;
+    --color-error: #FF3B3F;
+    --color-neutral: #EFEFEF;
+    --color-success: #3eb23c;
+    --color-teal: #2b6777;
+    
+}
+
+
+body{
+    background-color: var(--color-neutral);
+    font-family: 'Poppins', sans-serif;
+}
+.nav{
+    background-color: var(--color-sky);
+    color: var(--color-teal) ;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rideAlong{
+margin-left:2%;
+font-size: 2.2rem;
+ width: 20%;
+ text-align: center;
+ vertical-align: middle;
+}
+.logo{
+    margin: 4% 2% 0 0;
+    width: 30%;
+    border-radius: 40px;
+}
+.navList{
+    list-style-type: none;
+    margin-right: 2%;
+    display: flex;
+    color: var(--color-teal) ;
+    width: 50%;
+    justify-content: space-evenly;
+}
+.navList a{
+    padding: 2% 0 2% 0;
+}
+.navList a:hover {
+    -webkit-box-shadow: 0 8px 6px -6px var(--color-teal);
+    -moz-box-shadow: 0 8px 6px -6px var(--color-teal);
+         box-shadow: 0 8px 6px -6px var(--color-teal);
+}
+
+.title{
+    margin-top: 2%;
+    text-align: center;
+    color: var(--color-teal);
+    font-size: 1.5rem;
+
+}
+.container-main{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+} 
+.children{
+    width: 100%;
+}
+.successMessage{
+    color: var(--color-success);
+}
+.errorMessage{
+    color: var(--color-error);
+}
+
+
+/* FORMS s*/
+.form-div-outer{
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+    text-align: center;
+
+    justify-content: center;
+}
+.form-div-inner{
+    border: 2px solid var(--color-teal);
+    font-size: 1.3rem;
+    margin-top: 4%;
+    padding: 2%;
+    border-radius: 30px;
+    background-color:var(--color-neutral)  ;
+}
+.form-group{
+    padding: 2%;
+    text-align: left;
+}
+.btn-newaccount{
+    font-size: 0.8rem;
+}
+input, textarea{
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid var(--color-teal);
+    border-radius: 10px;
+   -webkit-box-shadow: 0 8px 6px -6px var(--color-teal);
+    -moz-box-shadow: 0 8px 6px -6px var(--color-teal);
+    box-shadow: 0 8px 6px -6px var(--color-teal);
+    padding: 0.8%;
+}
+textarea{
+    font-size: 1rem;
+}
+.btn-submit{
+    background-color: var(--color-teal);
+    color: var(--color-neutral);
+    border: none;
+    border-radius: 10px;
+    padding: 1%;
+    font-size: 1rem;
+    box-shadow: 3px 5px 9px 0px rgba(0,0,0,0.75);
+-webkit-box-shadow: 3px 5px 9px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 5px 9px 0px rgba(0,0,0,0.75);
+}
+
+
+/* Choose Role */
+.role{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 50vh;
+}
+.role-table{
+    width: 70%;
+    text-align: center;
+    border: none;
+}
+.role-column{
+    width: 50%;
+    border: none;
+}
+.btn-role{
+    width: 70%;
+    padding: 2%;
+    -webkit-box-shadow: 0 8px 6px -6px black;
+    -moz-box-shadow: 0 8px 6px -6px black;
+         box-shadow: 0 8px 6px -6px black;
+}
+button:hover,.active{
+    background-color: var(--color-carbon);
+    color: var(--color-teal);
+    font-weight: 600;
+}
+
+/* Admin Dashboard */
+.admin-div{
+    background-color: var(--color-sky);
+    border: 2px solid var(--color-teal);
+    margin-top: 5%;
+    border-radius: 50px;
+    margin-right: 4%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    text-align: left;
+    font-size: 1.3rem;
+} 
+.profile-pic 
+{
+    width:15%;
+     margin-top: 2%;
+
+}
+.profile-pic img{
+    width: 100%;
+    border-radius: 100%;
+    border: 2px solid var(--color-carbon);
+    background-color: var(--color-carbon);
+    height: 100%;
+}
+.admin-form{
+    border: none;
+}
+.btn-admin{
+    width: 50%;
+    padding: 3%;
+}
+.admin-dash{
+    grid-template-columns: 40% 60% ;
+    height: 70vh;
+}
+
+/* User Dashboard */
+ .user-dash{
+    grid-template-columns: 75% ;
+}
+.user-div{
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 1%;
+    align-items: center;
+}
+
+
+.ud-third-section{
+    width: 20%;
+}
+.ud-third-section div{
+    padding: 2%;
+}
+.ud-third-section div button{
+    width: 100%;
+}
+.user-info{
+    width: 40%;
+    text-align: left;
+    margin-left: 4%;
+
+}
+.profile-pic{
+    margin-top: 0;
+}
+.rides-table{
+    width: 100%;
+    padding-top: 0;
+}
+.sourcetd{
+    width: 40%;
+}
+hr{
+    margin: 2% 0 0 0;
+    border-top: 5px solid var(--color-carbon);
+    border-left: 0;  
+}
+.field{
+    color: var(--color-teal);
+    font-weight: 700;
+}
+.user-nav{
+    margin-top: 0;
+    margin: 0;
+    display: flex;
+    background-color: #2b6777;
+    padding: 0;
+    height: 50%;
+    width: 100%;
+}
+.vehicle-btn{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 25%;
+}
+.dash-btn{
+    padding: 4%;
+    box-shadow: none;
+}
+.btn-user{
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+/* User verification */
+.userVerification-table{
+    width: 100%;
+    text-align: center;
+    border: 4px solid var(--color-teal);
+}
+td, th{
+    border: 2px solid var(--color-teal);
+}
+.tdname{
+    width: 25%
+}
+.tddocument {
+    width:40%;
+}
+.tdstatus {
+    width:25%
+}
+.btn-modal{
+    width: 30%;
+}
+.btn-modal img{
+   width: 100%;
+}
+.ReactModal__Body--open{
+    text-align: center;
+    color: #2b6777;
+}
+.ReactModal__Body--open img{
+    width: 50%;
+}
+.btn-success{
+    background-color: var(--color-success);
+    color: var(--color-sky);
+    padding: 3%;
+    
+}
+/* Ride - Card */
+.ride-outer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+}
+.ride-card{
+    width: 50%;
+    margin: 0;
+    padding: 0;
+}
+.ride{
+    border: 2px solid #2b6777;
+    padding: 2%;
+    margin: 1%;
+    border-radius: 10px;
+}
+.ride-btn{
+    margin: 1%;
+}
+
+/* Ride - Status*/
+.rideStatus{
+    width: 100%;
+}
+.ride-req-btn{
+    text-align: center;
+    padding: 1%;
+}
+.ride-req-btn button{
+    padding: 2%;
+    border-radius:8px ;
+}
+/* Payment */
+.payment-success{
+    color: var(--color-success);
+    font-weight: 800;
+ 
+}
+/* delete-city */
+.btn-delete{
+    background-color: var(--color-error);
+    box-shadow: none;
+    margin: 2%;
+    padding: 3%;
+}
+.cityname{
+    width: 20% ;
+}
+.cityLatitude{
+    width: 20%;
+}
+.cityLongitude{
+    width: 30%;
+}
+.tddeletebtn{
+    width: 10%;
+}
+.btn-noboxshadow{
+    box-shadow: none;
+    padding: 1%;
+    border-radius: 5px;
+}
+.ratingradio{
+    display: none;
+}
+.ratingcontainer{
+    display: inline-flex;
+    font-size: 100%;
+}
+.ratingDiv{
+    cursor: pointer;
+}
+/* postRide */
+.postride-outer{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.postride-inner{
+    margin-top: 0;
+    width: 60% ;
+    border: none;
+
+}
+/* MAP */
+.map{
+    height: 50vh;
+    width: 70%;
+    padding: 1%;
+    margin: 3%;
+    border: 3px solid var(--color-carbon);
+}
+#geocoder-container > div {
+    min-width: 50%;
+    margin-left: 25%;
+    }
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--color-teal);
+}
+.footer-text{
+    text-align: center;
+    color: var(--color-sky);
+}
