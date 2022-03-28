@@ -14,7 +14,7 @@ const AddVehicle = () => {
         vehicleRC: "",
         success:"",
         loading: "",
-        error:"",
+        error:[],
         formData: new FormData()
     })
 
@@ -71,15 +71,7 @@ const AddVehicle = () => {
             )
         }
     }
-    const errorMessage = () =>{
-        if(error){
-            return (
-                <div className="errorMessage">
-                    <h2>{error}</h2>
-                </div>
-            )
-        }
-    }
+ 
     const showAddVehicleForm = () => {
         return (
             <div className="form-div-outer">
@@ -88,34 +80,45 @@ const AddVehicle = () => {
                     <form >
                         <div className="form-group">
                             <label htmlFor="model">
-                                Model:  <input 
+                                Model <span className="required">*</span>:  <input 
                                     type="text" 
                                     required={true}
                                     name="model" id="model" 
-                                    onChange={handleChange("model")}/>                                 
+                                    onChange={handleChange("model")}/>       <br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "model") return err.msg
+                                    })}</span>  </b>                        
                             </label>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="nameplate">
-                                Number on nameplate: <input 
+                            <label htmlFor="namePlate">
+                                Number on nameplate <span className="required">*</span>: <input 
                                     type="text" 
                                     required={true}
-                                    name="nameplate" id="nameplate" 
-                                    onChange={handleChange("nameplate")}/> 
+                                    name="namePlate" id="namePlate" 
+                                    onChange={handleChange("namePlate")}/>
+                                           <br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "namePlate") return err.msg
+                                    })}</span>  </b>  
                             </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="numberOfSeats">
-                                Number of seats (including driver seat): <input 
+                                Number of seats (including driver seat) <span className="required">*</span>: <input 
                                     type="number" 
                                     name="numberOfSeats" 
                                     required={true}
                                     id="numberOfSeats" 
                                     onChange={handleChange("numberOfSeats")}/>
+                                           <br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "numberOfSeats") return err.msg
+                                    })}</span>  </b> 
                             </label>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="license">License: </label>
+                            <label htmlFor="license">License <span className="required">*</span>: </label>
                             <input
                             style={{border: "none", boxShadow:"none"}}
                                 type="file"
@@ -125,9 +128,13 @@ const AddVehicle = () => {
                                 accept='image/*'
                                 onChange={handleChange("license")}
                             />         
+                                   <br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "license") return err.msg
+                                    })}</span>  </b> 
                         </div>
                         <div className="form-group">
-                            <label htmlFor="vehicleInsurance">Vehicle Insurance: </label>
+                            <label htmlFor="vehicleInsurance">Vehicle Insurance <span className="required">*</span>: </label>
                             <input
                             style={{border: "none", boxShadow:"none"}}
                                 type="file"
@@ -137,9 +144,14 @@ const AddVehicle = () => {
                                 accept='image/*'
                                 onChange={handleChange("vehicleInsurance")}
                             />         
+                            <br/>
+                            {console.log(error)}
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "vehicleInsurance") return err.msg
+                                    })}</span>  </b> 
                         </div>
                         <div className="form-group">
-                            <label htmlFor="vehicleRC">Vehcile RC: </label>
+                            <label htmlFor="vehicleRC">Vehcile RC <span className="required">*</span>: </label>
                             <input
                             style={{border: "none", boxShadow:"none"}}
                                 type="file"
@@ -149,6 +161,10 @@ const AddVehicle = () => {
                                 accept='image/*'
                                 onChange={handleChange("vehicleRC")}
                             />         
+                            <br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "vehicleRC") return err.msg
+                                    })}</span>  </b> 
                         </div>
                         <button className="btn-submit" onClick={onSubmit}>Add</button>
                     </form>
@@ -161,7 +177,12 @@ const AddVehicle = () => {
     return (
         <Base title="Register Vehicle">
             {successMessage()}
-            {errorMessage()}
+            {error && error.map((err) => {
+                if (err.param == 'general')
+                return( <div className="errorMessage">
+                <h2  style={{"fontSize": "1.2rem"}}>{err.msg}</h2>
+            </div>)
+            })}
             {loadingMessage()}
             {showAddVehicleForm()}
         </Base>

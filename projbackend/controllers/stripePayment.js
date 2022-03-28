@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.nextTick.STRIPE_SECRET_KEY)
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 const { v4: uuidv4 } = require('uuid');
 
 

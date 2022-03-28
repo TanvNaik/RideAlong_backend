@@ -11,8 +11,9 @@ const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentic
 const {
     getUserById, getUserFeedBacks,getUserRides, getUser, 
     updateUser,writeFeedback,getUserPayments, addVehicle,
-    verifyUser, showPendingVerifications,getUserVehicles
-} = require("../controllers/user")
+    verifyUser, showPendingVerifications,getUserVehicles,
+    checkUsernameAndEmail, changePassword
+} = require("../controllers/user");
 
 
 const fileStorageEngine = multer.diskStorage({
@@ -38,6 +39,8 @@ router.get("/vehicles/user/:userId", isSignedIn, isAuthenticated, getUserVehicle
 
 // PUT
 router.put("/user/:userId", isSignedIn, isAuthenticated,updateUser);
+router.put("/:userId/changePassword", changePassword)
+
 
 // POST
 router.post("/writeFeedback/:feedbacker/:feedbackReceiver",  writeFeedback)
@@ -53,7 +56,7 @@ router.post("/addVehicle/user/:userId",upload.fields([{
     .isLength({min: 1})
     .withMessage("Please provide model name"),
 
-    check("nameplate")
+    check("namePlate")
     .isAlphanumeric()
     .withMessage("Enter valid nameplate number"),
 
@@ -63,6 +66,7 @@ router.post("/addVehicle/user/:userId",upload.fields([{
 
 ],addVehicle) 
 
+router.post("/checkUsernameAndEmail", checkUsernameAndEmail )
 
 //Admin
 router.get("/pendingUserVerifications/:userId", isSignedIn, isAuthenticated, isAdmin, showPendingVerifications)

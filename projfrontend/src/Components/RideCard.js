@@ -11,7 +11,8 @@ const RideCard = (props) => {
 
     return (
             <div className="ride" id={props.ride._id}>
-                <div className="ride-driver"> <span className='field'>Driver: </span>{props.ride.driverUser.name}</div>
+                <div className="ride-driver"> <span className='field'>Driver:<Link to={`../view-profile/${props.ride.driverUser._id}`} style={{'color': 'black'}} >{props.ride.driverUser.name}</Link> </span>
+                </div>
 
                 <div className="ride-locations">
                     <span className="source"><span className="field">From: </span >{props.ride.sourceLocation[0].name} </span> <br></br>
@@ -36,16 +37,16 @@ const RideCard = (props) => {
                 
                 {(!props.isList) &&  (
                     <>
-                    {(props.ride.requestSent || props.ride.requests.includes(user._id)) ?
+                    {(props.ride.requestSent || props.ride.requests.includes(user)) ?
                         <button className="btn-submit ride-btn request-sent-btn " disabled>Sent</button>
                     : 
                     <button className=" btn-submit ride-btn request-ride" onClick={props.requestRide}>Request</button>
                     }
                      <Link to={`../messenger/${props.ride.driverUser._id}`}><button className="btn-submit ride-btn" >Chat</button></Link>
+                     <Link to={`../viewRide/${props.ride._id}`} ><button className="btn-submit ride-btn ">View Ride</button></Link>
+                     
                     </>
                 )}
-                {/* srcLatitude, srcLongitude, dstLatitude, dstLongitude */}
-                <Link to={`../viewmap/${props.ride._id}`} ><button className="btn-submit ride-btn ">View Map</button></Link>
                 
                 
             </div>
@@ -54,4 +55,4 @@ const RideCard = (props) => {
     )
 }
 
-export default RideCard
+export default RideCard;

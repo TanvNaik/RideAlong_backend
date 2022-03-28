@@ -4,14 +4,13 @@ import Base from '../core/Base';
 import StripeCheckout from '../core/StripeCheckout';
 import { getRidebyId } from './helper/rideapicalls';
 
-
 const Payment = () => {
     const [values, setValues] = useState({
         ride: "",
         error: "",
         success: ""
     })
-    const { ride, error, success} = values
+    const { ride } = values
     const rideId = useParams().rideId
     const preload = () => {
         getRidebyId(rideId)
@@ -66,7 +65,7 @@ const Payment = () => {
         )
     }
   return (
-    <Base>
+    <Base title=''>
         {ride && showInvoice()}
       
   </Base>);

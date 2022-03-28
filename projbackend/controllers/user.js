@@ -4,6 +4,8 @@ const Feedback = require("../models/feedback")
 const Invoice = require("../models/invoice")
 const Vehicle = require("../models/vehicle")
 const { check, validationResult } = require('express-validator');
+const e = require("express")
+const crypto = require("crypto");
 
 
 
@@ -37,34 +39,69 @@ exports.getUser = (req,res)=>{
     return res.json({
         user: req.user
     });  
-    })
-
-  
+    })  
 }
 
 
 exports.addVehicle = (req,res)=>{
 
     const errors = validationResult(req);
-
+    console.log(errors.errors)
     // checking for validation errors
     if(!errors.isEmpty()){
         return res.status(422).json({
-            error: errors.array()[0].msg,
+            error: errors.errors,
         })//422- Unprocessable entity
     }
+    if(req.body.numberOfSeats <= 1){
+        return res.status(422).json({
+            error: [{
+                param: "numberOfSeats",
+                msg: "Number of Seats must be more than 1"
+            }]
+            
+        })
+    }
+    if(!req.files.license){
+        return res.status(422).json({
+            error:[{
+                param: "license",
+                msg: "License is not Uploaded"
+            }] 
+        })
+    }
+    if(!req.files.vehicleInsurance){
+        return res.status(422).json({
+            error: [{
+                param: "vehicleInsurance",
+                msg: "Vehicle Insurance is not Uploaded"
+            }]
+        })
+    }
+    if(!req.files.vehicleRC){
+        return res.status(422).json({
+            error:[{
+                param: "vehicleRC",
+                msg: "Vehicle RC is not Uploaded"
+            }] 
+        })
+    }
+
 
     const vehicle = new Vehicle(req.body);
     vehicle.owner = req.profile._id;
     vehicle.license = req.files.license[0].filename;
     vehicle.vehicleInsurance = req.files.vehicleInsurance[0].filename;
     vehicle.vehicleRC = req.files.vehicleRC[0].filename;
-
+    
 
     vehicle.save((error, vehicle)=>{
         if(error){
             return res.status(400).json({
-                err: "Unable to add vehicle"
+                error: [{
+                    param: "general",
+                    msg:"Unable to add vehicle"
+                }]
             })
         }
         req.vehicle = vehicle;
@@ -78,7 +115,10 @@ exports.addVehicle = (req,res)=>{
         (error, user)=>{
             if(error){
                 return res.status(400).json({
-                    err: "Unable to add vehicle in user profile"
+                    error: [{
+                        param: "general",
+                        msg:"Unable to add vehicle in user profile"
+                    }]
                 })
             }
             return res.json({
@@ -88,6 +128,22 @@ exports.addVehicle = (req,res)=>{
     })
 }
 
+exports.checkUsernameAndEmail = (req,res) => {
+
+    User.find({'username': req.body.username, 'email': req.body.email})
+    .exec((err, user) => {
+        if(err || user.length == 0){
+            return res.status(400).json({
+                error: "There is no user with this email and username"
+            })
+        }
+        return res.json({
+            _id: user[0]._id
+        })
+    })
+
+
+}
 
 exports.getUserVehicles = (req, res) => {
 
@@ -124,6 +180,7 @@ exports.verifyUser = (req,res) =>{
 
     
 }
+
 exports.getUserRides = (req,res)=>{
     Ride.find({$or : 
         [
@@ -168,7 +225,26 @@ exports.updateUser = (req,res)=>{
             return res.json(user)
         })
 }
-
+exports.changePassword = (req,res) => {
+    const encry_password = crypto
+        .createHmac("sha256",req.profile.salt
+        )
+        .update(req.body.password)
+        .digest("hex");
+    User.findByIdAndUpdate(req.body._id,
+        {'encry_password': encry_password},
+        {new: true, useFindAndModify: false},
+        (err,user) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Unable to update password"
+                })
+            }
+            return res.json({
+                message: "Password Updated Successfully."
+            })
+        })
+}
 exports.getUserPayments = (req,res)=>{
 
     Invoice.find({

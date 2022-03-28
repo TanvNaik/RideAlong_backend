@@ -4,7 +4,7 @@ const User = require("../models/user")
 
 exports.getRideById = (req,res, next, id)=>{
     Ride.findById(id)
-    .populate('sourceLocation driverUser destinationLocation requests passengers payments')
+    .populate('sourceLocation driverUser destinationLocation vehicle requests passengers payments')
     .exec((error,ride)=>{
         if(error || !ride){
             return res.status(400).json({
@@ -84,19 +84,29 @@ exports.createRide = (req,res)=>{
     // checking for validation errors
     if(!errors.isEmpty()){
         return res.status(422).json({
-            error: errors.array()[0].msg
+            error: errors.errors
         })//422- Unprocessable entity
     }
     if(req.profile.verificationStatus !== true){
         return res.status(400).json({
-            error: "Documents needs to be verified by admin before posting a ride"
+            error:[{
+                param: "general",
+                msg: "Documents needs to be verified by admin before posting a ride"
+            }] 
+        })
+    }
+    if(req.body.seats < 1){
+        return res.status(400).json({
+            error:[{
+                param: "seats",
+                msg: "Vacant seats must be atleast 1"
+            }] 
         })
     }
 
     const ride = new Ride(req.body);
     ride.driverUser = req.profile._id
-    
-
+    // ride.vehicle = req.body.vehicle._id
     ride.save((err, ride) =>{
         if(err){
             return res.status(400).json({

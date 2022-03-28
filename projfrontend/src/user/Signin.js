@@ -7,14 +7,16 @@ import Base from '../core/Base';
 const SignIn = () => {
 
     const [values, setValues] = useState({
-        username: "abcdef",
-        password: "1234",
+        username: "",
+        password: "",
         error:"",
+        eerror: "",
+        perror: "",
         loading: false,
         didRedirect: false
     });
 
-    const {username, password, error,loading, didRedirect} = values;
+    const {username, password,perror, eerror, error,loading, didRedirect} = values;
     const {user} = isAuthenticated();
 
     const handleChange = (name) => (event)=>{
@@ -23,12 +25,19 @@ const SignIn = () => {
 
     const onSubmit = (event)=>{
         event.preventDefault();
-        setValues({...values, loading:true, error:false});
+        setValues({...values, loading:true, error:false, perror: "", eerror: ""});
+        console.log(username)
+        if(username === ""){
+             setValues({...values, eerror: "Please enter username"})
+        }
+        else if(password === ""){
+             setValues({...values,eerror: "", perror: "Please enter password"})
+        }else{
 
         signin({username, password})
         .then(data=>{
             if(data.error){
-                setValues({...values, error: data.error, loading: false})
+                setValues({...values, error: data.error,perror: "", eerror: "", loading: false})
             }
             else{
                 authenticate(data,()=>{
@@ -40,7 +49,7 @@ const SignIn = () => {
             }
         })
         .catch((err)=>console.log("Signin request failed!"))
-        
+    }
     }
 
     const performRedirect = () =>{
@@ -64,13 +73,7 @@ const SignIn = () => {
         )
     }
 
-    const errorMessage = () =>{
-        return(
-        <div className="errorMessage" style={{display: error ? "" : "none" }}>
-            {error}
-        </div>
-        )
-    }
+    
 
     const signInForm = () =>{
         return (
@@ -80,14 +83,19 @@ const SignIn = () => {
                     <form >
                         <div className='form-group'>
                             <label htmlFor="username" >Username: </label>
-                            <input type="text" id='username' onChange={handleChange("username")}/>
+                            <input type="text" id='username' onChange={handleChange("username")}/><br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{eerror}</span>  </b>  
                         </div>
                         <div className='form-group'>
                             <label htmlFor="password" >Password: </label>
-                            <input type="password" id='password'  onChange={handleChange("password")}/>
+                            <input type="password" id='password'  onChange={handleChange("password")}/><br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{perror}</span>  </b>  
                         </div>
                         <div className='btn-newaccount form-group'>
-                            Doesn't have an account?<Link to='../signup' >SignUp</Link>
+                            Doesn't have an account? <Link to='../signup' ><b>SignUp</b></Link>
+                        </div>
+                        <div className='btn-newaccount form-group'>
+                             <Link to='../forget-password' ><b>Forget Password</b></Link>
                         </div>
                         <br/>
                         <button className='btn-submit' onClick={onSubmit}>Submit</button>
@@ -102,10 +110,16 @@ const SignIn = () => {
        <Base
         title='Login'
         > 
+        {error && error.map((err) => {
+                if (err.param == 'general')
+                return( <div className="errorMessage">
+                <h2 style={{"fontSize": "1.2rem"}}>{err.msg}</h2>
+            </div>)
+            })}
             {loadingMessage()}
-            {errorMessage()}
             {signInForm()}
             {performRedirect()}
+            
         </Base>
     )
 }

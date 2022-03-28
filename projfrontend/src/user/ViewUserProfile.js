@@ -1,5 +1,5 @@
 import React , {useState, useEffect}from 'react'
-import {  Navigate,  useParams} from 'react-router-dom'
+import { Link, Navigate,  useParams} from 'react-router-dom'
 import { FaStar } from "react-icons/fa";
 import { isAuthenticated } from '../authentication/helper'
 import Base from '../core/Base'
@@ -133,7 +133,7 @@ const ViewUserProfile = (props ) => {
                 })}
                     </tbody>
                 </table>
-                   </div>) : (<span>No Feedbacks</span>) }
+                   </div>) : (<span>No Payments</span>) }
             </div>
             )
         }
@@ -144,27 +144,32 @@ const ViewUserProfile = (props ) => {
         if(current === "rides"){
                 
         return (
-            <div className="data">
-                <table className="rides-table">
-                    <tbody>
-                        <tr>
-                        <th className='sourcetd'>Source</th>
-                        <th className='destinationtd'>Destination</th>
-                        <th  className='timetd'>Time</th>
-                        </tr>
-                    {rides && rides.map((ride,key) => {
-                    return (
-                        <tr key={key}>
-                            {console.log(ride)}
-                            <td>{ride.sourceLocation[0].name}</td>
-                            <td>{ride.destinationLocation[0].name}</td>
-                            <td>{ride.startTime.split("T")[0]}</td>
-                        </tr>
-                    )
-                })}
-                    </tbody>
-                </table>
+            <div className="rides">
+                { rides != [] ? (
+                    <div className="data">
+                    <table className="rides-table">
+                        <tbody>
+                            <tr>
+                            <th className='sourcetd'>Source</th>
+                            <th className='destinationtd'>Destination</th>
+                            <th  className='timetd'>Time</th>
+                            </tr>
+                        {rides && rides.map((ride,key) => {
+                        return (
+                            <tr key={key}>
+                                {console.log(ride)}
+                                <td>{ride.sourceLocation[0].name}</td>
+                                <td>{ride.destinationLocation[0].name}</td>
+                                <td>{ride.startTime.split("T")[0]}</td>
+                            </tr>
+                        )
+                    })}
+                        </tbody>
+                    </table>
+                    </div>
+                ) : (<span>No Rides yet</span>)}
             </div>
+            
         )}
     }
 
@@ -175,14 +180,9 @@ const ViewUserProfile = (props ) => {
  
             {findUser && <div className="form-div-outer admin-dash user-dash">
             <div className='admin-div user-div'>
-                    <div className='profile-pic'>{
-                        findUser.profile_pic && (
-                            <img src={`http://localhost:8800/image/${user.profile_pic}`} />
-                        )
-                    }{
-                        (!findUser.profile_pic && (
-                            <img src={`http://localhost:8800/image/default_${user.gender.toLowerCase() }_pp.png`} />
-                        ))}
+                    <div className='profile-pic'>
+                       <img src={`http://localhost:8800/image/${findUser.profile_pic}`} />
+                        
                     </div><br/>
                     <div className='user-info'>
                    <div><span className='field'>Name: </span>{findUser.name}</div> 
@@ -196,7 +196,9 @@ const ViewUserProfile = (props ) => {
                        <span>Not verified</span>
                    )}
                    </div>
-                  
+                   <div>
+                           <Link to={`../messenger/${findUser._id}`} ><button className='btn-submit dash-btn' style={{'width' : '70%','padding': '1%'}}>Chat</button></Link>
+                        </div>
                    </div>
                    
                 </div>

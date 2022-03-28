@@ -137,6 +137,23 @@ const ViewMap = () => {
                             </label>
                         </div>
                         <div className="form-group">
+                            <label htmlFor="vehicle">
+                                Vehicle Model: <input 
+                                    type="text" 
+                                    name="vehicle" disabled id="vehicle" 
+                                    value={ride.vehicle.model}/>
+                            </label>
+                        </div>
+                        {console.log(ride.vehicle.model)}
+                        <div className="form-group">
+                            <label htmlFor="namplate">
+                                Nameplate: <input 
+                                    type="text" 
+                                    name="namplate" disabled id="namePlate" 
+                                    value={ride.vehicle.namePlate}/>
+                            </label>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="fare">
                                 Fare: <input 
                                     type="text" 

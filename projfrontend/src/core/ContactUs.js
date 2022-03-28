@@ -19,6 +19,13 @@ const  ContactUs = () =>  {
 
     const onSubmit = (e) => {
         e.preventDefault()
+        if(email == ""){ 
+            return setValues({...values, error:"Please provide your email Id"})
+        }
+        if(message == ""){
+            return setValues({...values, error: "Message cannot be empty"})
+        }
+        
         const reqobj = {
             email: email,
             message: message
@@ -27,7 +34,7 @@ const  ContactUs = () =>  {
             if(data.error){
                 setValues({...values, error: "Unable to send mail"})
             }else{
-                setValues({...values, success: true})
+                setValues({...values, success: true, error:""})
             }
         })
     }

@@ -10,6 +10,17 @@ export const addVehicle = (userId, token, vehicle) => {
     .catch( err => console.log(err))
 }
 
+export const checkUsernameAndEmail = (obj) => {
+    return fetch(`/api/checkUsernameAndEmail`, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(obj)
+    }).then(response => response.json())
+    .catch(err => console.log(err))
+}
 export const getUserPayments = (userId, token) => {
     return fetch(`/api/payments/user/${userId}`)
     .then(response => response.json())
@@ -65,4 +76,27 @@ export const writeFeedback = (userId, receiverId, token, feedback) => {
         },
         body: JSON.stringify(feedback)
     })
+}
+
+export const updateUser = (userId, token, userobj) =>{
+    return fetch(`/api/user/${userId}`, {
+        method: "PUT",
+        headers:{
+            Accept: "application/json",
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body:  JSON.stringify(userobj)
+    })
+}
+export const changePassword = (obj) => {
+    return fetch(`/api/${obj._id}/changePassword`,{
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj)
+    }).then(response => response.json())
+    .catch(err => console.log(err))
 }

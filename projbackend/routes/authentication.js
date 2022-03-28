@@ -23,16 +23,7 @@ router.get("/test",  (req,res)=>{
 
 
 // POST routes
-router.post("/signin", 
-    [
-        check("username")
-        .isLength({min:6})
-        .withMessage("Enter valid username"),
-        
-        check("password")
-        .isLength({min:1})
-        .withMessage("Password field is required")
-    ],
+router.post("/signin",
     signin
 ) 
 router.post("/signup", upload.fields([{
@@ -73,5 +64,7 @@ router.post("/signup", upload.fields([{
     .withMessage('Mobile number should be 10 digits only')
 
 ] , signup )
+
+
 
 module.exports = router;

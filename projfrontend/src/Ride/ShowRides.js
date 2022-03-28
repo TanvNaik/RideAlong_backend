@@ -3,20 +3,34 @@ import { isAuthenticated } from '../authentication/helper';
 import Base from '../core/Base';
 import { getAllRides, requestRideCall } from './helper/rideapicalls';
 import RideCard from '../Components/RideCard';
-import ViewMap from '../Map/ViewMap';
-import { Link } from 'react-router-dom';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder"
 
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidGFudmktbmFpayIsImEiOiJja3Q4cWtlemYxNGoyMndvNzdzeWs5MjB5In0.oH-aTfa41Y2L-MmvZeYz5Q';
 
 const ShowRides = () => {
-    
+ 
+    // var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
+    // geocoder.addTo('#address-input');
+    var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+      });
+      
     const [values, setValues] = useState({
         rides: [],
         error: "",
         loading:false,
+        sourceFilter: "",
         filter: {
-            source: "Mumbai",
-            destination: "Delhi"
-        }
+            latitude: "",
+            longitude: "",
+            name:""
+        },
+        currentFilter: "",
+        destinationFilter: ""
     })
 
     const {user, token} = isAuthenticated()
@@ -24,35 +38,51 @@ const ShowRides = () => {
     const {
         error,
         rides,
-        loading,
-        filter
+        filter,
+        sourceFilter,
+        destinationFilter,
+        currentFilter
     } = values
 
+    const setFilterValue = (val) => {
+        if (val == "source"){
+            setValues({...values, currentFilter: val, sourceFilter: filter.name })
+        }else{
+            setValues({...values, currentFilter: val, destinationFilter: filter.name})
+        }
+        
+    }
+    geocoder.on('result', (event) => {
+        console.log(event.result)
+        let coordinates = {
+            latitude: "",
+            longitude: "",
+            name: event.result.place_name.split(",")[0]
+        }
+        setValues({...values, filter: coordinates})
+        // setLatitude(event.result.geometry.coordinates[1])
+        // setLongitude(event.result.geometry.coordinates[0])
+        const place = event.result.place_name.split(",")
+    })
     const preload = () => {
-       
+        // geocoder.addTo("#location")
+        console.log(user._id)
+        
         setValues({...values, loading: true})
         getAllRides().then(data => {
             let rides=[]
-            let today = new Date()
             data.rides.map(ride => {
-                let rideDate =  ride.startTime.split('T')[0]
-                let rideTime =ride.startTime.split('T')[1].split('.')[0]
-                let todayDate = today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate()
-                let todayTime = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
-
-                rides.push(ride)
+                
                 if(
                 (!ride.passengers.includes(user._id)) &&
                 (!ride.requests.includes(user._id)) &&
-                (! (ride.driverUser._id == user._id)) && 
-                (! (ride.passengers.length == ride.seats)) &&
-                ( (rideDate < todayDate ? (rideTime > todayTime ? true : false) : false)
-                )) 
+                ((ride.driverUser._id !== user._id)) && 
+                (! (ride.seats <= 0)) 
+                ) 
                 {
                     rides.push(ride)
                 }
             })
-            
             
             setValues({...values, loading:false, rides: rides})
         })
@@ -102,6 +132,7 @@ const ShowRides = () => {
     const showRides = () => {
         return (
             <div  className="ride-card">
+
                 {rides && rides.map((ride, key) => {
                     if( ride.seats > 0){
                         return <RideCard ride={ride} key={key} requestRide = {requestRide}/>
@@ -110,14 +141,37 @@ const ShowRides = () => {
             </div>
         )
     }
-   
+   const locationFilter = () => {
+       return (
+            <div className="filter">
+                <h4>Search By Location</h4><br/>
+                <div className="filter-inner">
+                
+               <div id="location">
+
+               </div><br/>
+               <button className='btn-submit ride-btn' onClick={()=> setFilterValue("source")} style={{'padding': '2%'}}>Set Source</button>
+                <button className='btn-submit ride-btn' onClick={()=> setFilterValue("destination")} style={{'padding': '2%'}}>Set Destination</button>
+                </div><br/>
+                {
+                    currentFilter && (
+                    <div className="displayfilter">
+                        <span>Source: {sourceFilter}</span><br/>
+                        <span>Destination: {destinationFilter}</span>
+                    </div>
+                    )                
+                }
+                
+            </div>
+       )
+   }
 
     return (
         <Base title="Find a ride">
             {errorMessage()}
             <div className='ride-outer'>
+            {/* {locationFilter()} */}
             {showRides()}
-            {/* {srcLatitude && <ViewMap srcLatitude={srcLatitude} srcLongitude={srcLongitude} dstLatitude={dstLatitude} dstLongitude={dstLongitude} Change={didChange} />} */}
             </div>
            
         </Base>

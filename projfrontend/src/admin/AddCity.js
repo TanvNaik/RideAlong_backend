@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { isAuthenticated } from '../authentication/helper';
-import { API } from '../backend';
 import Base from '../core/Base';
 import { addCity } from './helper/adminapicalls';
 /* D O N E */

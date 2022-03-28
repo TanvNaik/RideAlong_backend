@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal'
+import { Link } from 'react-router-dom'
 import { isAuthenticated } from '../authentication/helper'
 import Base from '../core/Base'
 import { showUnverifiedUsers, verifyUsersbyId } from './helper/adminapicalls'
@@ -116,7 +117,7 @@ const UserVerification = () => {
                         {users && users.map((user,key)=>{
                             return(
                                 <tr key={key}>
-                                    <td className='tdname'>{user.name}</td>
+                                    <td className='tdname'><Link to={`../view-profile/${user._id}`} style={{'color': 'black'}} >{user.name}</Link></td>
                                     <td className='tddocument'>
                                         <button onClick={openModal} className='btn-modal btn-delete'>   
                                         Show Document                                    
@@ -134,7 +135,10 @@ const UserVerification = () => {
                                     </td>
                                     <td className='tdstatus'>
                                         {(!user.verificationStatus) && (
-                                                <button className='btn-submit btn-success' onClick={() => verifyUser(user._id)}>Verify user</button>
+                                            <>
+                                                <button className='btn-submit btn-success' onClick={() => verifyUser(user._id)}>Mark as verified</button>&nbsp;
+                                                {/* <button className='btn-submit btn-danger' onClick={() => verifyUser(user._id)}>Mark as rejected</button> */}
+                                                </>
                                             )
                                         }
                                         {user.verificationStatus && (

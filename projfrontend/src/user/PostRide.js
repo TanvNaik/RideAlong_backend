@@ -24,10 +24,9 @@ const PostRide = () => {
         startTime: "",
         fare: "",
         seats: "",
-        error: "",
+        error: [],
         success: false,
         loading: false, 
-        cities: []
     })
     const {user,token} = isAuthenticated();
     const {
@@ -43,7 +42,6 @@ const PostRide = () => {
         error,
         success,
         loading,
-        cities
     } = values;
     const  onLocationChange = (lat, lon, name) => {
         setLatitude(lat)
@@ -61,6 +59,7 @@ const PostRide = () => {
                
             }else{
                     setValues({...values, vehicles: data.vehicles, vehicle: data.vehicles[0]._id})
+                    console.log(data.vehicles)
             }
         })
 
@@ -71,11 +70,11 @@ const PostRide = () => {
     }, [])
 
     
-    const onSubmit = (event) =>{
+    const onSubmit = (event) => {
         event.preventDefault();
         setValues({...values, loading: true, error:""})
-        console.log(destinationLocation)
-
+       
+        
         createRide({ sourceLocation, destinationLocation, startTime, vehicle, fare, seats}, user._id, token).then(data => {
             if(data.error){
                 setValues({...values, error: data.error, loading: false})
@@ -105,15 +104,7 @@ const PostRide = () => {
             )
         }
     }
-    const errorMessage = () =>{
-        if(error){
-            return (
-                <div className="errorMessage">
-                    <h2>{error}</h2>
-                </div>
-            )
-        }
-    }
+   
     const handleChange = (name) => (event)=>{
         setValues({...values, error:false, [name]: event.target.value})
     }
@@ -130,64 +121,83 @@ const PostRide = () => {
     }
 
     const rideForm = ()=>{
+        
         return (
             <div className="form-div-outer postride-outer">
-
                 <div className="form-div-inner postride-inner" >
                     <form>
                         <b style={{'fontSize': "1rem"}}>Find location on map and click on set Location</b>
                         <div className="form-group">
                             <label htmlFor="sourceLocation">
-                                    Source: <input type='text' 
+                                    Source <span className="required">*</span> : <input type='text' 
                                     value={startLocation} 
+                                    name="sourceLocation"
                                     disabled
                                     onChange={handleChange("startLocation")}/> &nbsp;
                                     <button className="btn-submit" onClick={(e) => { e.preventDefault()
-                                setLocation('source')}}>Set Location</button>
+                                setLocation('source')}}>Set Location</button><br/>
+                                <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                    if(err.param === "sourceLocation") return err.msg
+                                })}</span>  </b>  
                             </label>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sourceLocation">
+                            <label htmlFor="destLocation">
 
-                                Destination: <input type='text' disabled value={destLocation} onChange={handleChange("destLocation")}/> &nbsp;<button className="btn-submit" onClick={(e) => { e.preventDefault()
-                                setLocation('dest')}}>Set Location</button>
+                                Destination <span className="required">*</span>: <input type='text' name='destinationLocation' disabled value={destLocation} onChange={handleChange("destLocation")}/> &nbsp;<button className="btn-submit" onClick={(e) => { e.preventDefault()
+                                setLocation('dest')}}>Set Location</button><br/>
+                                <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                    if(err.param === "destinationLocation") return err.msg
+                                })}</span>  </b>  
                             </label>
                         </div>
                         
                         <div className="form-group">
                             <label htmlFor="vehicle">
-                                Vehicle: 
+                                Vehicle <span className="required">*</span> : 
                                     <select id='vehicle' name='vehicle' onChange={handleChange("vehicle")}>
                                         {vehicles && vehicles.map((vehicle,key)=>{
                                             return (
                                                 <option key={key} value={vehicle._id}>{vehicle.model}</option>
                                             )
                                         })}
-                                    </select>
+                                    </select><br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "vehicle") return err.msg
+                                    })}</span>  </b>  
                             </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="seats">
-                                Seats: <input 
+                                Seats <span className="required">*</span> : <input 
                                     type="number" 
                                     name="seats" id="seats" 
-                                    onChange={handleChange("seats")}/>
+                                    onChange={handleChange("seats")}/><br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "seats") return err.msg
+                                    })}</span>  </b>  
                             </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="fare">
-                                Fare: <input 
+                                Fare <span className="required">*</span> : <input 
                                     type="text" 
                                     name="fare" id="fare" 
-                                    onChange={handleChange("fare")}/>
+                                    onChange={handleChange("fare")}/><br/>
+                                    <b><span className="errorMessage" style={{'fontSize': "0.8rem"}}>{error && error.map((err) => {
+                                        if(err.param === "fare") return err.msg
+                                    })}</span>  </b>  
                             </label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="startTime">
-                            Start Time: <input 
+                            Start Time <span className="required">*</span> : <input 
                                     type="datetime-local" 
                                     name="startTime" id="startTime" 
-                                    onChange={handleChange("startTime")}/>
+                                    onChange={handleChange("startTime")}/><br/>
+                                    <b><span className="errorMessage" >{error && error.map((err) => {
+                                        if(err.param === "startTime") return err.msg
+                                    })}</span>  </b>  
                             </label>
                         </div>
                         <button className="btn-submit" onClick={onSubmit}>Post</button>
@@ -195,16 +205,20 @@ const PostRide = () => {
                 </div>
                 <Map latitude={latitude} longitude={longitude} onLocationChange={onLocationChange}/>
                
-
             </div>
         )
     }
 
     return (
         <Base title='Post Ride'>
+            {error && error.map((err) => {
+                if (err.param == 'general')
+                return( <div className="errorMessage">
+                <h2  style={{"fontSize": "1.2rem"}}>{err.msg}</h2>
+            </div>)
+            })}
             {successMessage()}
             {loadingMessage()}
-            {errorMessage()}
             {rideForm()}
         </Base>
     )

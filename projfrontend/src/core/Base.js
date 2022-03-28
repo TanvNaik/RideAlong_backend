@@ -10,18 +10,22 @@ const Base = ({
         <div>
             <Nav></Nav>
             <div className='container-main'>
-                <div className='title'>
+                { title ? (
+                    <div className='title'>
                     <h2>{title}</h2>
                 </div>
-                <div className='children'>
+                ): ""}
+
+                
+                <div className='children' >
                     {children}
                 </div>
             </div>
-            <div className="footer" id='footer'>
+            {/* <div className="footer" id='footer'>
                 <div className="footer-text">
                 © Copyright RideAlong. All Rights Reserved
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

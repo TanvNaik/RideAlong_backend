@@ -4,6 +4,7 @@ import { isAuthenticated } from '../authentication/helper';
 import Base from '../core/Base';
 import { getUserRides } from './helper/userapicalls';
 import {BsFillCheckSquareFill, BsFillXSquareFill} from 'react-icons/bs'
+import { VscChromeClose, VscCheck } from "react-icons/vsc";
 
 const CheckRideStatus = () => {
     const {user, token} = isAuthenticated()
@@ -92,10 +93,10 @@ const CheckRideStatus = () => {
                         {pendingRides && pendingRides.map((ride,key) => {
                             return (<tr key={key} id={ride.ride._id}>
                               
-                                <td className='tdname'>{ride.ride.sourceLocation[0].name} to {ride.ride.destinationLocation[0].name}</td>
+                                <td className='tdname'>{ride.ride.sourceLocation[0].name} <span className="field"><b>to</b></span> {ride.ride.destinationLocation[0].name}</td>
 
                                 {/* Checks if the ride is owned by the current user */}
-                                <td>{ride.driver == true ? (<BsFillCheckSquareFill/>): (<BsFillXSquareFill/>)}</td>
+                                <td>{ride.driver == true ? (<VscCheck color='green' fontSize={"2rem"}/>): (<VscChromeClose color='red' fontSize={"2rem"}/>)}</td>
 
                                 {/* Checks for request status in case user has requested for a ride */}
                                 <td className='tddocument'>

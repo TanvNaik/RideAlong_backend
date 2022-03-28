@@ -32,7 +32,13 @@ const UserDashboard = () => {
             if(data.feedbacks) feedbacks = data.feedbacks
             getUserRides(user._id)
             .then(data =>{
-                if(data.rides)
+                if(data.rides){
+                    rides = data.rides.map(ride => {
+                        if(!ride.requests.filter( req => req ==user._id)){
+                            return ride
+                        }
+                    })
+                }
                 rides = data.rides
                 getUserPayments(user._id)
                 .then(data => {
@@ -40,7 +46,7 @@ const UserDashboard = () => {
 
                     setValues({...values, rides: rides, feedbacks: feedbacks, payments: payments})
                 })
-            }).catch(err => console.log("Unable to retrieve user data"))
+            }).catch(err => console.log(err))
 
         })
     }
@@ -130,44 +136,42 @@ const UserDashboard = () => {
     const loadRides = () =>{
         if(current === "rides"){
                 
-        return (
-            <div className="data">
-                <table className="rides-table">
-                    <tbody>
-                        <tr>
-                        <th className='sourcetd'>Source</th>
-                        <th className='destinationtd'>Destination</th>
-                        <th  className='timetd'>Time</th>
-                        </tr>
-                    {rides && rides.map((ride,key) => {
-                    return (
-                        <tr key={key}>
-                            {console.log(ride)}
-                            <td>{ride.sourceLocation[0].name}</td>
-                            <td>{ride.destinationLocation[0].name}</td>
-                            <td>{ride.startTime.split("T")[0]}</td>
-                        </tr>
-                    )
-                })}
-                    </tbody>
-                </table>
-            </div>
-        )}
+            return (
+                <div className="rides">
+                    { rides != [] ? (
+                        <div className="data">
+                        <table className="rides-table">
+                            <tbody>
+                                <tr>
+                                <th className='sourcetd'>Source</th>
+                                <th className='destinationtd'>Destination</th>
+                                <th  className='timetd'>Time</th>
+                                </tr>
+                            {rides && rides.map((ride,key) => {
+                            return (
+                                <tr key={key}>
+                                    {console.log(ride)}
+                                    <td>{ride.sourceLocation[0].name}</td>
+                                    <td>{ride.destinationLocation[0].name}</td>
+                                    <td>{ride.startTime.split("T")[0]}</td>
+                                </tr>
+                            )
+                        })}
+                            </tbody>
+                        </table>
+                        </div>
+                    ) : (<span>No Rides yet</span>)}
+                </div>
+                
+            )}
     }
-
 
     return (
         <Base title=''>
             <div className="form-div-outer admin-dash user-dash">
             <div className='admin-div user-div'>
-                    <div className='profile-pic'>{
-                        user.profile_pic && (
+                    <div className='profile-pic'>
                             <img src={`http://localhost:8800/image/${user.profile_pic}`} />
-                        )
-                    }{
-                        (!user.profile_pic && (
-                            <img src={`http://localhost:8800/image/default_${user.gender.toLowerCase() }_pp.png`} />
-                        ))}
                     </div>
                     <div className='user-info'>
                    <div><span className='field'>Name: </span>{user.name}</div> 
@@ -181,9 +185,9 @@ const UserDashboard = () => {
                        <span style={{color:'red', fontWeight: 500}}>Not verified</span>
                    )}
                    </div>
-                   {/* <div>
+                   <div>
                            <Link to={"../update-profile"} ><button className='btn-submit dash-btn' style={{'width' : '70%','padding': '1%'}}>Update Profile</button></Link>
-                        </div> */}
+                        </div>
                       
                   
                    </div>

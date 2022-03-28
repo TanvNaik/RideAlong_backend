@@ -109,8 +109,8 @@ const ShowRideRequests = ()=> {
    
     const showRideRequests = () =>{
         return (
-            <div className="form-div-outer admin-dash">
-            <div className="form-div-inner admin-form ">
+            <div className="form-div-outer admin-dash req-dash">
+            <div className="form-div-inner admin-form ride-card">
                  {/* Display ride list */}
                  {rides && rides.map((ride,key) =>{
                     return <RideCard ride={ride} key={key} isList = {true} showLabels={ true } viewRide ={viewRide}/>
@@ -122,7 +122,7 @@ const ShowRideRequests = ()=> {
                     if(currentRide === ride._id){
                         if(ride.requests){
                             return (
-                                <table key={key} style={{border: "none"}}>
+                                <table key={key} style={{border: "none"}} className="request-table">
                                     <tbody>
                                         <tr>
                                         <th>Name</th>

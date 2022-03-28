@@ -11,23 +11,68 @@ exports.signup = (req,res) => {
     // checking for validation errors
     if(!errors.isEmpty()){
         return res.status(422).json({
-            error: errors.array()[0].msg
+            error: errors.errors
         })//422- Unprocessable entity
     }
+
+    if(!req.files.document){
+        return res.status(422).json({
+            error:[{
+                param: "document",
+                msg: "Document is not Uploaded"
+            }] 
+        })
+    }
+    
+    if(req.body.cfPassword !== req.body.password){
+        return res.status(422).json({
+            error: [{
+                param: "cfPassword",
+                msg: "Password and confirm password must match"
+            }] 
+        })
+    }
+
     const user = new User(req.body);
     user.document = req.files.document[0].filename;
-    user.profile_pic = req.files.pp[0].filename;
+    if(req.files.pp){
+        user.profile_pic = req.files.pp[0].filename;
+    }
+    else{
+        user.profile_pic = user.gender == "Female" ? "default_female_pp.png":"default_male_pp"
+    }
 
     user.save((err, user) => {
         if(err){
-            return res.status(400).json({
-                error: "Unable to add user in Database" //check error code(for email and username) and send response accordingly
-            })
+            console.log(err)
+            if(err.keyValue.email){
+                return res.status(400).json({
+                    error: [{
+                        param: "general",
+                        msg: "An account with this email already exists"
+                    }] 
+                })
+            }else if(err.keyValue.username){
+                return res.status(400).json({
+                    error: [{
+                        param: "general",
+                        msg: "Username is already taken"
+                    }] 
+                })
+            }else{
+                return res.status(400).json({
+                    error:[{
+                        param: "general",
+                        msg:"Signup failed"
+                    }]  
+                })
+            }
         }
         return res.json({
             name: user.name,
             email: user.email,
             id: user._id,
+            profile_pic: user.profile_pics
         })
     })
 
@@ -35,23 +80,21 @@ exports.signup = (req,res) => {
 
 exports.signin = (req,res) => {
     const { username, password } = req.body;
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(422).json({
-            error: errors.array()[0].msg,
-        })
-    }
+    
     User.findOne(
         {$or:[
             {email: username},
             {username: username}
         ]}
-            , ((err, user)=>{
+            ,((err, user)=>{
 
         // checking if user with given email exists
         if(err || !user){
             return res.status(400).json({
-                error: "Bad credentials"
+                error: [{
+                    param: "general",
+                    msg: "Bad credentials"
+                }] 
             })
         }
 

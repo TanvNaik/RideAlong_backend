@@ -15,7 +15,7 @@ const Signup = () => {
         document: "",
         gender:"",
         contact_number: "",
-        error: false,
+        error: [false],
         loading: false,
         didRedirect: false,
         formData: new FormData()
@@ -44,20 +44,10 @@ const Signup = () => {
         }
     }
 
-    const errorMessage = () =>{
-        return(
-        <div className="errorMessage" style={{display: error ? "" : "none" }}>
-            {error}
-        </div>
-        )
-    }
+
 
     const onSubmit = (event) =>{
         event.preventDefault();
-
-        if(!(password === cfPassword)){
-            setValues({...values,error: "Password and Confirm Password must match"})
-        }
 
         setValues({...values, error: "",loading: true});
         signup(formData)
@@ -66,6 +56,7 @@ const Signup = () => {
                 setValues({...values, error: data.error, loading:false})
             }
             else{
+                alert("Successfully Registered")
                 setValues({
                     ...values,
                     loading: false,
@@ -84,10 +75,11 @@ const Signup = () => {
 
     const signUpForm = ()=>{
         return (
-            <div className="form-div-outer">
-                <div></div>
-                <div className='form-div-inner'>
+            <div className="signup-form-div-outer" >
+
                     <form >
+                        <div className="inner-parent">
+                        <div className="signup-inner">
                         <div className="form-group">
                             <label htmlFor="pp">Profile Pic: </label>
                             <input
@@ -98,73 +90,103 @@ const Signup = () => {
                                 required={true}
                                 accept='image/*'
                                 onChange={handleChange("pp")}
-                            />         
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "pp") return err.msg
+                            })}</span>  </b>           
                         </div>
                         <div className="form-group">
                             <label htmlFor="name">
-                                Name: </label> 
+                                Name<span className="required">*</span> : </label> 
                             <input 
                             type="text"
                             id='name' 
                             required={true}
                             onChange={handleChange("name")}
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "name") return err.msg
+                            })}</span>  </b>  
                         </div>
                         <div className="form-group">
                             <label htmlFor="username">
-                                Username: </label> 
+                                Username<span className="required">*</span> : </label> 
                             <input 
                             type="text"
                             id='username'
                             required={true}
                             onChange={handleChange("username")}
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "username") return err.msg
+                            })}</span>  </b>  
                         </div>
                         <div className="form-group">
-                            <label htmlFor="email">Email: </label>
+                            <label htmlFor="email">Email <span className="required">*</span> : </label>
                             <input 
                             type="email" 
                             id="email" 
                             required={true}
                             onChange={handleChange("email")}
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "email") return err.msg
+                            })}</span>  </b>  
                         </div>
                         <div className="form-group">
-                            <label htmlFor="password">Password: </label>
+                            <label htmlFor="password">Password<span className="required">*</span> : </label>
                             <input 
                             type="password" 
                             id='password' 
                             required={true}
                             onChange={handleChange("password")}
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "password") return err.msg
+                            })}</span>  </b>  
                         </div>
+                        </div>
+                        
+                        <div className="signup-inner">
+                       
                         <div className="form-group">
-                            <label htmlFor="cf-password">Confirm Password: </label>
+                            <label htmlFor="cf-password">Confirm Password<span className="required">*</span> : </label>
                             <input 
                             type="password" 
                             required={true}
                             id='cf-password'
                             onChange={handleChange("cfPassword")} 
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "cfPassword") return err.msg
+                            })}</span>  </b>  
                         </div>
                         <div className="form-group">
                             <label htmlFor="gender">
-                                Gender: </label> 
+                                Gender <span className="required">*</span> : 
                             
-                            <input type="radio" value="Male" name="gender" onChange={handleChange("gender")} /> Male
+                            <input type="radio" value="Male" name="gender" onChange={handleChange("gender")} /> Male &nbsp;
                             <input type="radio" value="Female" name="gender" onChange={handleChange("gender")} /> Female
+                            </label><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "gender") return err.msg
+                            })}</span>  </b>  
                         </div>
                         <div className="form-group">
-                            <label htmlFor="mob-number">Mobile number: </label>
+                            <label htmlFor="mob-number">Mobile number <span className="required">*</span> : </label>
                             <input 
                             type="text" 
                             id='mob-number'
                             required={true}
                             onChange={handleChange("contact_number")} 
-                            />
+                            /><br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "contact_number") return err.msg
+                            })}</span>  </b>  
                         </div>
+                        
                         <div className="form-group">
-                            <label htmlFor="document">Document: </label>
+                            <label htmlFor="document">Document <span className="required">*</span>: </label>
                             <input
                             style={{border: "none", boxShadow:"none"}}
                                 type="file"
@@ -173,19 +195,33 @@ const Signup = () => {
                                 required={true}
                                 accept='image/*'
                                 onChange={handleChange("document")}
-                            />         
+                            />   <br/>
+                            <b><span className="errorMessage" >{error && error.map((err) => {
+                                if(err.param === "document") return err.msg
+                            })}</span>  </b>        
                         </div>
-                        <button className="btn-submit" onClick={onSubmit}>SignUp</button>
+                        </div>
+                        
+                        
+                        </div>
+                        <div style={{"textAlign": "center"}}>
+                        <button className="btn-submit" style={{"width": "10%", "padding": "10px"}} onClick={onSubmit}>SignUp</button>
+                        </div>
+                       
                     </form>
-                    <div></div>
-                </div>
-                <div></div>
+              
+             
             </div>
         )
     }
     return (
         <Base title='SignUp'>
-            {errorMessage()}
+            {error && error.map((err) => {
+                if (err.param == 'general')
+                return( <div className="errorMessage">
+                <h2 style={{"fontSize": "1.2rem"}}>{err.msg}</h2>
+            </div>)
+            })}
             {signUpForm()}
             <div style={{'height': "3rem"}}></div>
           

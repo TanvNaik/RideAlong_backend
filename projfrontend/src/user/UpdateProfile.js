@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { isAuthenticated } from '../authentication/helper'
 
 import Base from '../core/Base'
-import { getUser } from './helper/userapicalls'
+import { getUser, updateUser } from './helper/userapicalls'
 
 const UpdateProfile = () => {
     const {user,token}= isAuthenticated()
@@ -11,12 +11,10 @@ const UpdateProfile = () => {
         username: "",
         password: "",
         cfPassword: "",
-        pp: "",
-        email:"",
-        document: "",
-        gender:"", 
+        email:"", 
         contact_number: "",
         error: false,
+        success: "",
         loading: false,
         didRedirect: false,
         formData: new FormData()
@@ -27,24 +25,67 @@ const UpdateProfile = () => {
         username,
         password,
         cfPassword,
-        document,
-        pp,
         email,
-        gender,
+        success,
         contact_number,
         error,
         loading,
         didRedirect,
-        formData
      } = values
 
      const onSubmit = (event) =>{
+    
         event.preventDefault();
+        setValues({...values,error: ""})
         if(!(password === cfPassword)){
             setValues({...values,error: "Password and Confirm Password must match"})
+        }else{
+            let userobj = {
+                username: username,
+                password: password,
+                contact_number: contact_number
+            }
+
+
+            setValues({...values, error: "",loading: true});
+            updateUser(user._id, token, userobj)
+            .then(data => {
+                if (data.error){
+                    setValues({...values, loading: false, error: data.error})
+                }else{
+                    setValues({...values,loading: false, success: "Profile updated successfully"})
+                }
+            })
         }
-        setValues({...values, error: "",loading: true});
         
+        
+    }
+    const loadingMessage = () =>{
+        if(loading){
+            return (
+                <div className="loadingMessage">
+                    <h2>Loading...</h2>
+                </div>
+            )
+        }
+    }
+    const successMessage = () => {
+        if(success){
+            return (
+                <div className="successMessage">
+                    <h2>{success}</h2>
+                </div>
+            )
+        }
+    }
+    const errorMessage = () =>{
+        if(error){
+            return (
+                <div className="errorMessage">
+                    <h2>{error}</h2>
+                </div>
+            )
+        }
     }
     useEffect(()=>{
         getUser(user._id, token, user._id)
@@ -61,12 +102,9 @@ const UpdateProfile = () => {
             })
             }
         })
-    })
+    },[])
     const handleChange = (name) => (event) =>{
-        const value = (name === "document" || name === "pp")? event.target.files[0] : event.target.value;
-        
-        formData.set(name,value)
-        setValues({...values, [name]: value})
+        setValues({...values, [name]: event.target.value})
     }
     const showForm = () => {
         return (
@@ -101,8 +139,7 @@ const UpdateProfile = () => {
                             type="email" 
                             id="email" 
                             value={email}
-                            required={true}
-                            onChange={handleChange("email")}
+                            disabled
                             />
                         </div>
                         <div className="form-group">
@@ -111,6 +148,7 @@ const UpdateProfile = () => {
                             type="password" 
                             id='password' 
                             required={true}
+                            value={password}
                             onChange={handleChange("password")}
                             />
                         </div>
@@ -119,6 +157,7 @@ const UpdateProfile = () => {
                             <input 
                             type="password" 
                             required={true}
+                            value={cfPassword}
                             id='cf-password'
                             onChange={handleChange("cfPassword")} 
                             />
@@ -133,7 +172,7 @@ const UpdateProfile = () => {
                             onChange={handleChange("contact_number")} 
                             />
                         </div>
-                        <button className="btn-submit" onClick={onSubmit}>SignUp</button>
+                        <button className="btn-submit" onClick={onSubmit}>Update Changes</button>
                     </form>
                     <div></div>
                 </div>
@@ -143,6 +182,9 @@ const UpdateProfile = () => {
     }
   return (
     <Base title='Update your Profile'>
+        {successMessage()}
+            {loadingMessage()}
+            {errorMessage()}
         {showForm()}
     </Base>
   )

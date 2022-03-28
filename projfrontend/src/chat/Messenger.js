@@ -221,7 +221,7 @@ const Messenger = () => {
                                 <div className="chatBoxBottom">
                                     <div className="chatMessageInput">
                                         <br />
-                                        <textarea name="message" placeholder={message} onChange={handleChange()}></textarea>
+                                        <textarea className='text-area' name="message" placeholder={message} onChange={handleChange()}></textarea>
                                     </div>
                                     {newConv ? (<button className='chatSubmitButton' onClick={sendNewMessage}>Send</button>): (<button className='chatSubmitButton' onClick={sendMessage}>Send</button>)}
                                     
