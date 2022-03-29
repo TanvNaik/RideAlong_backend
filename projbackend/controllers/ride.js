@@ -110,7 +110,10 @@ exports.createRide = (req,res)=>{
     ride.save((err, ride) =>{
         if(err){
             return res.status(400).json({
-                error: `${err}`
+                error:[{
+                    param: "general",
+                    msg: `${err}`
+                }]  
             })
         }
         req.ride = ride;
@@ -124,7 +127,10 @@ exports.createRide = (req,res)=>{
         (error, user)=>{
             if(error){
                 return res.status(400).json({
-                    err: "Unable to add ride in user profile"
+                    err: [{
+                        param: "general",
+                        msg: "Unable to add ride in user profile"
+                    }]   
                 })
             }
             return res.json({

@@ -87,7 +87,7 @@ const CheckRideStatus = () => {
                             <th className='tdname'>Ride</th>
                             <th className='tdstatus'>Own Ride</th>
                             <th className='tddocument'>Request Status</th>
-                            <th className='tdstatus'>Payemnt Status</th>
+                            <th className='tdstatus'>Payment Status</th>
                             <th className=''>Feedback</th>
                         </tr>
                         {pendingRides && pendingRides.map((ride,key) => {

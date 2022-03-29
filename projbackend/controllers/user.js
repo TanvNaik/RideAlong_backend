@@ -340,25 +340,11 @@ exports.updatePaymentInUser = (req,res) => {
                     error: "Unable to update payment to sender"
                 })
             }
-            res.locals.invoiceSender = user;
-            User.findByIdAndUpdate(req.body.receiver, 
-                {"$push" : { "payments": res.locals.invoice._id}},
-                {new: true, useFindAndModify: false },
-                (err, ruser)=>{
-                    if(err){
-                        return res.status(400).json({
-                            error: "Unable to update payment to receiver"
-                        })
-                    }
-                    res.locals.invoiceReceiver = ruser;
-                    console.log("Done with sender")
-                    return res.json({
+            return res.json({
                         invoice: res.locals.invoice,
                         ride: res.locals.ride
                     })
-
-                }
-                )
+            
         }
         )
 }

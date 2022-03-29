@@ -146,7 +146,7 @@ textarea{
     border: 2px solid var(--color-teal);
     border-radius: 30px;
     display: flex;
-    height: 60vh;
+    height: 70vh;
     justify-content: space-evenly;
     align-items: center;
     text-align: center;
@@ -157,6 +157,7 @@ textarea{
     overflow-y:auto  ;
 }
 .signup-inner{
+    width: 50%;
     margin-top: 1%;
     padding: 1%;
     
@@ -403,7 +404,7 @@ td, th{
     justify-content: center;
     margin: 0;
     padding: 0;
-    height: 80vh;
+    height: 45vh;
     overflow-y: scroll;
     overflow: scroll;
     overflow-x: hidden;

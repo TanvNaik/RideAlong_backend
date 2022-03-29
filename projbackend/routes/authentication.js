@@ -40,9 +40,9 @@ router.post("/signup", upload.fields([{
 
     check("username")
     .isAlphanumeric()
-    .withMessage("Username must be alphanumeric and  atleast 6 characters")
+    .withMessage("Username must be alphanumeric ")
     .isLength({min:6})
-    .withMessage("Username must be alphanumeric and  atleast 6 characters"),
+    .withMessage("Username must be atleast 6 characters"),
 
     check("email")
     .isEmail()
@@ -50,9 +50,9 @@ router.post("/signup", upload.fields([{
 
     check("password")
     .isLength({min: 8})
-    .withMessage("Password must be minimum 8 characters and alphanumeric")
+    .withMessage("Password must be minimum 8 characters ")
     .isAlphanumeric()
-    .withMessage("Password must be minimum 8 characters and alphanumeric"),
+    .withMessage("Password must be alphanumeric"),
 
     check("gender")
     .isLength({min: 1})

@@ -104,8 +104,10 @@ const Signup = () => {
                             required={true}
                             onChange={handleChange("name")}
                             /><br/>
-                            <b><span className="errorMessage" >{error && error.map((err) => {
-                                if(err.param === "name") return err.msg
+                            <b><span className="errorMessage" >{error && error.slice(0,10).map((err) => {
+                                if(err.param === "name") return (<>
+                                {err.msg}<br/>
+                                </>)
                             })}</span>  </b>  
                         </div>
                         <div className="form-group">
@@ -117,8 +119,10 @@ const Signup = () => {
                             required={true}
                             onChange={handleChange("username")}
                             /><br/>
-                            <b><span className="errorMessage" >{error && error.map((err) => {
-                                if(err.param === "username") return err.msg
+                            <b><span className="errorMessage" >{error && error.slice(0,10).map((err) => {
+                                if(err.param === "username") return (<>
+                                {err.msg}<br/>
+                                </>)
                             })}</span>  </b>  
                         </div>
                         <div className="form-group">
@@ -141,8 +145,10 @@ const Signup = () => {
                             required={true}
                             onChange={handleChange("password")}
                             /><br/>
-                            <b><span className="errorMessage" >{error && error.map((err) => {
-                                if(err.param === "password") return err.msg
+                            <b><span className="errorMessage" >{error && error.slice(0,10).map((err) => {
+                                if(err.param === "password") return (<>
+                                {err.msg}<br/>
+                                </>)
                             })}</span>  </b>  
                         </div>
                         </div>

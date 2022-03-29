@@ -51,11 +51,14 @@ const PostRide = () => {
     }
     const preload = () => {
         if(!user.verificationStatus){
-            return setValues({...values, error: "Documents need to be verified to post a ride"})
+            return setValues({...values, error: [{
+                param: "general",
+                msg: "Documents need to be verified to post a ride"}]})
         }
         getUserVehicles(user._id, token).then(data => {
             if(data.error) {
-                setValues({...values, error: "To post a ride, you must add a vehicle first"})
+                
+                    return setValues({...values, error: [{        param: "general", msg: "To post a ride, you must add a vehicle first"}]})
                
             }else{
                     setValues({...values, vehicles: data.vehicles, vehicle: data.vehicles[0]._id})
