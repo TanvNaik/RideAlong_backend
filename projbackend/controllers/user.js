@@ -3,8 +3,7 @@ const Ride = require("../models/ride")
 const Feedback = require("../models/feedback")
 const Invoice = require("../models/invoice")
 const Vehicle = require("../models/vehicle")
-const { check, validationResult } = require('express-validator');
-const e = require("express")
+const { validationResult } = require('express-validator');
 const crypto = require("crypto");
 
 

@@ -10,7 +10,7 @@ const AdminDashboard = () => {
         redirect: false
     })
 
-    const {user,token} = isAuthenticated();
+    const {user} = isAuthenticated();
     const handleClick = (name) => (event) =>{
         setValues({...values, path: `/${event.target.id}`, redirect: true})
     } 
@@ -26,8 +26,6 @@ const AdminDashboard = () => {
             <div className="form-div-outer admin-dash">
                 <div className="form-div-inner admin-form ">
                     <br/>
-                    <button className="btn-submit btn-admin" id='add-city' onClick={handleClick("add-city")}>Add City</button> <br/><br/>
-                    <button className="btn-submit btn-admin" id='delete-city' onClick={handleClick("delete-city")}>Delete City</button> <br/><br/>
                     <button className="btn-submit btn-admin" id='user-verification' onClick={handleClick("user-verification")}>Verify Users</button> 
                     <br />
                 </div>

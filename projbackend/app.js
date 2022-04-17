@@ -11,7 +11,6 @@ const path = require("path")
 const authenticateRoute = require("./routes/authentication");
 const userRoute = require("./routes/user");
 const rideRoute = require("./routes/ride")
-const cityRoute = require("./routes/city")
 const invoiceRoute = require("./routes/invoice")
 const stripeRoutes = require("./routes/stripePayment")
 const conversationRoutes = require("./routes/conversation")
@@ -46,7 +45,6 @@ app.use("/api", authenticateRoute);
 app.use("/api", userRoute);
 app.use("/api", rideRoute);
 app.use("/api", invoiceRoute);
-app.use("/api", cityRoute);
 app.use("/api", stripeRoutes);
 app.use("/api", conversationRoutes);
 

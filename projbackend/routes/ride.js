@@ -1,5 +1,5 @@
 const express = require("express");
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const router = express.Router();
 
 const {
@@ -64,7 +64,6 @@ router.post("/ride/locationFilter", getRidesByLocations)
 
 
 // PUT
-/* router.put("/ride/:rideId", updateRide); */
 router.put("/request-ride/:rideId/:userId", isSignedIn,isAuthenticated, requestRide)
 router.put("/approve-passenger/:userId/:rideId/:acceptId", isSignedIn, isAuthenticated, approveRideRequest)
 router.put("/reject-passenger/:userId/:rideId/:rejectId", isSignedIn, isAuthenticated, rejectRideRequest)

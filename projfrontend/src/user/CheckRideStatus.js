@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { isAuthenticated } from '../authentication/helper';
 import Base from '../core/Base';
 import { getUserRides } from './helper/userapicalls';
-import {BsFillCheckSquareFill, BsFillXSquareFill} from 'react-icons/bs'
 import { VscChromeClose, VscCheck } from "react-icons/vsc";
 
 const CheckRideStatus = () => {
-    const {user, token} = isAuthenticated()
+    const {user} = isAuthenticated()
     const [values, setValues] = useState({
         userRidesAll: [],
         error: "",
@@ -17,17 +16,13 @@ const CheckRideStatus = () => {
     })
 
     const {
-        userRidesAll,
-        error,
-        success,
-        loading,
         pendingRides
     } = values
 
     const preload = () => {
         const setPendingRides = (rides) => {
             var pendingR = []
-            rides.map((ride, key) => {
+            rides.map((ride) => {
                 if (ride.driverUser._id == user._id){
                     pendingR.push({ride:ride, driver:true, request:false, passengers:false, payments: false})
                 }
@@ -51,8 +46,7 @@ const CheckRideStatus = () => {
                 setValues({...values, error: data.error})
             }
             else{
-/*                 setValues({...values, userRidesAll: data.rides })
- */                setPendingRides(data.rides)
+               setPendingRides(data.rides)
             }
         }).catch(err => console.log(err))
 
@@ -64,20 +58,7 @@ const CheckRideStatus = () => {
     }, [] )
 
     
-    
-    // const performChecks = (ride)=>{
-    //     if(ride.requests) {
-    //         return <span>NA</span>
-    //     }
-    //     if(ride.passengers === true){
-    //         if(ride.payments === true){
-    //             return <span>Paid</span>
-    //         }
-    //         else{
-    //             return 
-    //         }
-    //     }
-    // }
+  
     const showStatus = () => {
         return (
             <div className="rideStatus">

@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { isAuthenticated } from '../authentication/helper'
 import Base from '../core/Base'
 import { FaStar } from "react-icons/fa";
-import {  getUser, getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
+import {  getUserFeedbacks, getUserPayments, getUserRides } from './helper/userapicalls'
 
 
 const UserDashboard = () => {
@@ -15,7 +15,7 @@ const UserDashboard = () => {
         current: "feedbacks" //rides default
     })
     const {current, rides, feedbacks, payments} = values
-    const {user, token} = isAuthenticated()
+    const {user} = isAuthenticated()
 
     const handleClick = (name) => (event) =>{
          setValues({...values, current: name})

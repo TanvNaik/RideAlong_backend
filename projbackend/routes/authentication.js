@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const multer = require("multer");
-const {signup, signin,signout, isSignedIn} = require("../controllers/authentication");
+const {signup, signin,signout} = require("../controllers/authentication");
 const path = require("path")
 
 const fileStorageEngine = multer.diskStorage({
@@ -23,9 +23,7 @@ router.get("/test",  (req,res)=>{
 
 
 // POST routes
-router.post("/signin",
-    signin
-) 
+router.post("/signin",signin) 
 router.post("/signup", upload.fields([{
     name: 'pp', maxCount: 1
   }, {

@@ -13,8 +13,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoidGFudmktbmFpayIsImEiOiJja3Q4cWtlemYxNGoyMndvN
 
 const ShowRides = () => {
  
-    // var geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
-    // geocoder.addTo('#address-input');
+
     var geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
       });
@@ -60,12 +59,10 @@ const ShowRides = () => {
             name: event.result.place_name.split(",")[0]
         }
         setValues({...values, filter: coordinates})
-        // setLatitude(event.result.geometry.coordinates[1])
-        // setLongitude(event.result.geometry.coordinates[0])
+
         const place = event.result.place_name.split(",")
     })
     const preload = () => {
-        // geocoder.addTo("#location")
         console.log(user._id)
         
         setValues({...values, loading: true})
@@ -141,36 +138,12 @@ const ShowRides = () => {
             </div>
         )
     }
-   const locationFilter = () => {
-       return (
-            <div className="filter">
-                <h4>Search By Location</h4><br/>
-                <div className="filter-inner">
-                
-               <div id="location">
 
-               </div><br/>
-               <button className='btn-submit ride-btn' onClick={()=> setFilterValue("source")} style={{'padding': '2%'}}>Set Source</button>
-                <button className='btn-submit ride-btn' onClick={()=> setFilterValue("destination")} style={{'padding': '2%'}}>Set Destination</button>
-                </div><br/>
-                {
-                    currentFilter && (
-                    <div className="displayfilter">
-                        <span>Source: {sourceFilter}</span><br/>
-                        <span>Destination: {destinationFilter}</span>
-                    </div>
-                    )                
-                }
-                
-            </div>
-       )
-   }
 
     return (
         <Base title="Find a ride">
             {errorMessage()}
             <div className='ride-outer'>
-            {/* {locationFilter()} */}
             {showRides()}
             </div>
            

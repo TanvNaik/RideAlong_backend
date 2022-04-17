@@ -56,10 +56,7 @@ export const getUserRides = (userId) => {
     .then(response => response.json())
     .catch(err => console.log(err))
 }
-export const getCityNames = (sourceId, destinationId) => {
-    return fetch(`/api/city-names/${sourceId}/${destinationId}`).then(response => response.json())
-    .catch(err => console.log(err)) 
-}
+
 export const getUserFeedbacks = (userId)=>{
     return fetch(`/api/feedbacks/user/${userId}`)
     .then(response => response.json())

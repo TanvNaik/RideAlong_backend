@@ -1,7 +1,5 @@
 import React from 'react'
 import { BrowserRouter, Routes as Switch, Route } from "react-router-dom";
-import AddCity from './admin/AddCity';
-import DeleteCity from './admin/DeleteCity';
 import UserVerification from './admin/UserVerification';
 import AdminRoute from './authentication/helper/AdminRoutes';
 import PrivateRoute from './authentication/helper/PrivateRoutes';
@@ -43,10 +41,7 @@ const Routers = () => {
 
                 {/* ADMIN ROUTES */}
                 <Route element={<AdminRoute/>}>
-                    <Route  path='/add-city' element={<AddCity/>}/>
-                    <Route path="/add-city" exact element={<AddCity/>}/>
                     <Route path="/admin-dashboard" exact element={<AdminDashboard/>} />
-                    <Route path="/delete-city" exact element={<DeleteCity/>} />
                     <Route path="/user-verification" exact element={<UserVerification/>} />
                 </Route>
                

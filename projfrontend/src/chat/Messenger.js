@@ -5,7 +5,6 @@ import Conversation from './conversations/Conversation'
 import Message from './message/message'
 import { isAuthenticated } from '../authentication/helper'
 import { createConversation, createMessage, getMessages, getUserConversations } from './helper/chatapicalls'
-/* import {io} from "socket.io-client" */
 import { useParams } from 'react-router-dom'
 import { getUser } from '../user/helper/userapicalls'
 const Messenger = () => {
@@ -15,17 +14,13 @@ const Messenger = () => {
     const [messages, setMessages] = useState([])
     const [newConv, setNewConv] = useState([])
     const [newUser, setNewUser] = useState("")
-    const [arrivalMessage, setArrivalMessage] = useState("")
     const [error, setError] = useState("")
     const {user, token} = isAuthenticated()
     const [message, setMessage] = useState("Write a message...")
-    /* const [socket, setSocket] = useState(null) */
-    const socket = useRef()
     const scrollRef = useRef()
     const userId = useParams().userId
     
     useEffect(() => {
-        /* socket.current = io("ws://localhost:8900") */
 
         if(userId){
             getUser(userId, token, user._id)
@@ -40,33 +35,10 @@ const Messenger = () => {
             setNewUser(false)
         }
     
-        /* // receiving message
-        socket.current.on('getMessage', (data) => {
-            setArrivalMessage({
-                sender: data.sender,
-                content: data.text,
-                createdAt: Date.now(),
-                })
-        }) */
+       
     },[])
     
-    /* useEffect(()=>{
-        if(arrivalMessage){
-            if( currentChat){
-                if (currentChat.members[0]._id === arrivalMessage.sender._id || currentChat.members[0]._id === arrivalMessage.sender._id ){
-                    setMessages(prev => [...prev, arrivalMessage])
-                }
-            }
-        }
-    },[arrivalMessage, currentChat])
- */
-    /* useEffect(()=>{
-        socket.current.emit('addUser', user._id)
-        socket.current.on('getUsers', users => {
-            //
-        })
-    },[user]) */
-
+    
 
     useEffect(() => {
         getUserConversations(user._id, token)
@@ -94,6 +66,15 @@ const Messenger = () => {
             }
         
     }
+    const errorMessage = () =>{
+        if(error){
+            return (
+                <div className="errorMessage">
+                    <h2>{error}</h2>
+                </div>
+            )
+        }
+    }
     useEffect(() => {
         loadChat()
     }, [currentChat])
@@ -116,12 +97,7 @@ const Messenger = () => {
             sender: user._id,
             content: message
         }
-        const receiverId = (currentChat.members[0]._id === user._id) ? currentChat.members[1]._id : currentChat.members[0]._id
-     /*    socket.current.emit('sendMessage', {
-            sender: user,
-            receiverId,
-            text: message
-        }) */
+
         createMessage(mess).then(data => {
             if(data.error) {
                 setError("Unable to send message")
@@ -240,6 +216,7 @@ const Messenger = () => {
 
     return (
         <Base title="">
+            {errorMessage()}
            {messenger()}
         </Base>
     )

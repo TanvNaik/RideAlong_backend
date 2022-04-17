@@ -75,10 +75,6 @@ const ShowRideRequests = ()=> {
     useEffect(()=>{
         preload()
     }, [])
-    const handleClick = () => {
-
-    }
-
     const loadingMessage = () =>{
         if(loading){
             return (

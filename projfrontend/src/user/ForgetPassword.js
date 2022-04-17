@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import Base from "../core/Base"
-import { sendEmail } from '../core/helper/coreapicalls'
-import { changePassword, checkUsernameAndEmail, updateUser } from './helper/userapicalls'
+import { changePassword, checkUsernameAndEmail } from './helper/userapicalls'
 
 
 const  ForgetPassword = () =>  {
@@ -19,7 +18,7 @@ const  ForgetPassword = () =>  {
         userId: "",
         check: false
     })
-    const {message, userId, email, password, cfpassword, perror, cferror, username, check, error ,success} = values
+    const { userId, email, password, cfpassword, perror, cferror, username, check, error ,success} = values
 
     const handleChange = (name) => (event) =>{        
         setValues({...values, [name]: event.target.value})

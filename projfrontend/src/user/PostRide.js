@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react'
-
 import { isAuthenticated } from '../authentication/helper';
 import Map from '../Components/Map';
 import Base from '../core/Base';
-import { createRide, getAllCities } from "../Ride/helper/rideapicalls";
+import { createRide } from "../Ride/helper/rideapicalls";
 import { getUserVehicles } from './helper/userapicalls';
 
 

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import React, {useState} from 'react'
+import {  Navigate } from 'react-router-dom'
 import { signup } from '../authentication/helper'
 import Base from '../core/Base'
 
@@ -23,16 +23,7 @@ const Signup = () => {
     })
 
     const {
-        name,
-        username,
-        password,
-        cfPassword,
-        document,
-        pp,
-        gender,
-        contact_number,
         error,
-        loading,
         didRedirect,
         formData
      } = values

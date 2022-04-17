@@ -16,9 +16,8 @@ const Feedback = () => {
         currentFeedback: ""
     })
     const [rating, setRating] = useState(0)
-    const count = 5
     const {user,token} = isAuthenticated()
-    const { ride, error, success,  rideFeedbacks, currentPassenger,  currentFeedback  } = values
+    const { ride, error, success, currentPassenger,  currentFeedback  } = values
     const rideId = useParams().rideId
     const preload = () => {
         getRidebyId(rideId)
@@ -161,8 +160,7 @@ const Feedback = () => {
                                     
                             </label>
                         </div>
-                        
-                        
+                                                
                     </form>
             )}
                     

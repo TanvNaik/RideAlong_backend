@@ -4,7 +4,7 @@ const multer = require("multer");
 const path = require("path")
 
 const nodemailer = require('nodemailer')
-const {check, validationResult} = require("express-validator")
+const {check} = require("express-validator")
 
 const {isSignedIn, isAdmin, isAuthenticated} = require("../controllers/authentication")
 

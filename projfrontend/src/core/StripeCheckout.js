@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { isAuthenticated } from '../authentication/helper'
 import StripeCheckoutButton from 'react-stripe-checkout'
 import { createInvoice } from '../Ride/helper/rideapicalls'
@@ -7,22 +6,19 @@ import { createInvoice } from '../Ride/helper/rideapicalls'
 const StripeCheckout = ({ride, fare}) =>  {
     const [values, setValues] = useState({
         loading: false,
-        success: false,
         error: "",
         paymentStatus: "",
         ride: ""
     })
     const {
-        loading,
-        success,
-        error,
-        paymentStatus
+        paymentStatus, loading
     } = values
-    const {user, token} = isAuthenticated()
+    const {user} = isAuthenticated()
 
     const userId =user._id
 
     const makePayment = (token) => {
+        setValues({...values, loading: true})
         const body = {
             token,
             fare,
@@ -46,11 +42,11 @@ const StripeCheckout = ({ride, fare}) =>  {
                 }
                 createInvoice(body, userId, ride._id, isAuthenticated().token).then(data => {
                     if(data.error){
-                        setValues({...values, error: data.error})
+                        setValues({...values, error: data.error, loading:false})
                     }
                     else{
                         console.log(data)
-                        setValues({...values, paymentStatus: status})
+                        setValues({...values, paymentStatus: status, loading:false})
                     }
                 })
             }
@@ -72,10 +68,19 @@ const StripeCheckout = ({ride, fare}) =>  {
         
         
     }
-    
+    const loadingMessage = ()=>{
+        return(
+            loading && (
+                <div className="loadingMessage">
+                    <h2>Loading...</h2>
+                </div>
+            )
+        )
+    }
 
     return (
         <div>
+            {loadingMessage()}
             {(paymentStatus === 200) && 
                     (
                         <div className='payment-success' >Payment Successfull</div>

@@ -6,10 +6,6 @@ const {
     addInvoice,
     getRideInvoices
 } = require("../controllers/invoice")
-const {
-    isSignedIn,
-    isAuthenticated
-} = require("../controllers/authentication");
 const { updatePayemtInRide } = require("../controllers/ride");
 const { updatePaymentInUser } = require("../controllers/user");
 

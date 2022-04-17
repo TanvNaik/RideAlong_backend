@@ -29,8 +29,7 @@ const UpdateProfile = () => {
         success,
         contact_number,
         error,
-        loading,
-        didRedirect,
+        loading
      } = values
 
      const onSubmit = (event) =>{

@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { BsChevronCompactLeft } from 'react-icons/bs';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-
 import Base from '../core/Base'
 import { getRidebyId, getRideInvoices, removePassengerFromRide } from './helper/rideapicalls';
 
@@ -13,12 +10,10 @@ const CheckPayments = () => {
         success: "",
         rideInvoices: "",
         paidPassengers: [],
-        pendingPassengers: [],
         currentPassenger: "",
         currentInvoice: ""
     })
-    const { ride, error, success, paidPassengers,currentPassenger, pendingPassengers, currentInvoice, rideInvoices } = values
-// TODO: check for pending payment passengers too
+    const { ride, error, success, paidPassengers,currentPassenger, currentInvoice, rideInvoices } = values
     const rideId = useParams().rideId
     const preload = () => {
         let ride
@@ -35,7 +30,7 @@ const CheckPayments = () => {
                             setValues({...values, error: data.error})
                         }else{
                             let paidPassengers = []
-                            ride.passengers.map( (passenger, key)=> {
+                            ride.passengers.map( (passenger)=> {
                                 data.invoices.filter(invoice => invoice.sender._id == passenger._id).map(item => paidPassengers.push(item.sender._id))
                             })
 

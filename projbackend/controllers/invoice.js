@@ -1,7 +1,5 @@
 const Invoice = require("../models/invoice")
-const User = require("../models/user")
-const Ride = require("../models/ride")
-const invoice = require("../models/invoice")
+
 exports.getInvoiceById = (req,res,next,id)=>{
     Invoice.findById(id)
     .populate('sender receiver')

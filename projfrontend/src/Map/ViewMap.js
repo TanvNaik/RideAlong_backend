@@ -11,16 +11,7 @@ import { isAuthenticated } from '../authentication/helper';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGFudmktbmFpayIsImEiOiJja3Q4cWtlemYxNGoyMndvNzdzeWs5MjB5In0.oH-aTfa41Y2L-MmvZeYz5Q';
 
-// {
-//   sourceLocation: [{
-//     latitude:19.0596 ,
-//     longitude:72.8295 
-//   }],
-//   destinationLocation: [{
-//     latitude: 19.0596,
-//     longitude: 72.8295
-//   }]
-// }
+
 const ViewMap = () => {
   const [ride, setRide] = useState("")
   const [thours, setThours] = useState("")
@@ -54,7 +45,6 @@ const ViewMap = () => {
   },[ride])
 
   const requestRide = (e) => {
-    const rideId = e.target.parentNode.id
 
     //backend request-ride call
     requestRideCall(ride._id, user._id, token)

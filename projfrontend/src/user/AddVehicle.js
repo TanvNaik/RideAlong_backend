@@ -20,12 +20,6 @@ const AddVehicle = () => {
 
 
     const {
-        namePlate,
-        model,
-        numberOfSeats,
-        license,
-        vehicleInsurance,
-        vehicleRC,
         success,
         loading,
         error,
