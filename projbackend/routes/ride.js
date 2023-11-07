@@ -24,9 +24,6 @@ const {
     removePassengerFromRide
 } = require("../controllers/ride");
 
-// PARAMs
-router.param("userId", getUserById);
-router.param("rideId", getRideById);
 
 // GET
 router.get("/getAllRides", getAllRides)
