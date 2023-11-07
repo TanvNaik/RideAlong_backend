@@ -32,11 +32,14 @@ mongoose
   });
 
 
-
+ 
 // Middlewares
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(cors({
+  origin : "https://ridealong-carpooling.onrender.com",
+  credentials: true, // <= Accept credentials (cookies) sent by the client
+})));
 app.use("/image", cors(),express.static(path.join(__dirname, '/uploads/images')))
 
 
